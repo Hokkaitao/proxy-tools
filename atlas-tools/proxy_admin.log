@@ -1,0 +1,50 @@
+2017-09-25 04:57:35.439386: (message)network-mysqld.c:2508(network_mysqld_admin_con_accept): event_thread(15) C:127.0.0.1:47730 C_usr: CON_STATE_INIT new admin connection accepted
+2017-09-25 04:57:35.439915: (message)network-mysqld.c:1560(network_mysqld_con_handle): event_thread(0) C:127.0.0.1:47730 C_usr: CON_STATE_SEND_HANDSHAKE send handshake
+2017-09-25 04:57:35.439975: (message)network-mysqld.c:1613(network_mysqld_con_handle): event_thread(0) C:127.0.0.1:47730 C_usr: CON_STATE_READ_AUTH to read auth packet
+2017-09-25 04:57:35.440001: (message)network-mysqld.c:1620(network_mysqld_con_handle): event_thread(14) C:127.0.0.1:47730 C_usr: CON_STATE_READ_AUTH wait for client event(type:2,fd:92)
+2017-09-25 04:57:35.440087: (message)network-mysqld.c:1174(network_mysqld_con_handle): event_thread(9) C:127.0.0.1:47730 C_usr: CON_STATE_READ_AUTH client event(type:2,fd:92) was waked up
+2017-09-25 04:57:35.440104: (message)network-mysqld.c:1613(network_mysqld_con_handle): event_thread(10) C:127.0.0.1:47730 C_usr: CON_STATE_READ_AUTH to read auth packet
+2017-09-25 04:57:35.440144: (message)network-mysqld.c:1746(network_mysqld_con_handle): event_thread(0) C:127.0.0.1:47730 C_usr:monitor CON_STATE_SEND_AUTH_RESULT send auth to client
+2017-09-25 04:57:35.440187: (message)network-mysqld.c:1770(network_mysqld_con_handle): event_thread(6) C:127.0.0.1:47730 C_usr:monitor CON_STATE_READ_QUERY [connect finished]
+2017-09-25 04:57:35.440210: (message)network-mysqld.c:1897(network_mysqld_con_handle): event_thread(0) C:127.0.0.1:47730 C_usr:monitor CON_STATE_READ_QUERY wait for client event(type:2,fd:92)
+2017-09-25 04:57:35.440275: (message)network-mysqld.c:1174(network_mysqld_con_handle): event_thread(8) C:127.0.0.1:47730 C_usr:monitor CON_STATE_READ_QUERY client event(type:2,fd:92) was waked up
+2017-09-25 04:57:35.440344: (message)network-mysqld.c:1925(network_mysqld_con_handle): event_thread(0) C:127.0.0.1:47730 C_usr:monitor CON_STATE_READ_QUERY read query:select @@version_comment limit 1
+2017-09-25 04:57:35.445996: (message)network-mysqld.c:2199(network_mysqld_con_handle): event_thread(0) C:127.0.0.1:47730 C_usr:monitor CON_STATE_SEND_QUERY_RESULT send query result success
+2017-09-25 04:57:35.446032: (message)network-mysqld.c:1897(network_mysqld_con_handle): event_thread(0) C:127.0.0.1:47730 C_usr:monitor CON_STATE_READ_QUERY wait for client event(type:2,fd:92)
+2017-09-25 04:57:37.736212: (message)network-mysqld.c:1174(network_mysqld_con_handle): event_thread(7) C:127.0.0.1:47730 C_usr:monitor CON_STATE_READ_QUERY client event(type:2,fd:92) was waked up
+2017-09-25 04:57:37.736320: (message)network-mysqld.c:1925(network_mysqld_con_handle): event_thread(0) C:127.0.0.1:47730 C_usr:monitor CON_STATE_READ_QUERY read query:show tables
+2017-09-25 04:57:37.736583: (message)network-mysqld.c:2199(network_mysqld_con_handle): event_thread(0) C:127.0.0.1:47730 C_usr:monitor CON_STATE_SEND_QUERY_RESULT send query result success
+2017-09-25 04:57:37.736616: (message)network-mysqld.c:1897(network_mysqld_con_handle): event_thread(0) C:127.0.0.1:47730 C_usr:monitor CON_STATE_READ_QUERY wait for client event(type:2,fd:92)
+2017-09-25 04:57:42.738980: (message)network-mysqld.c:1174(network_mysqld_con_handle): event_thread(13) C:127.0.0.1:47730 C_usr:monitor CON_STATE_READ_QUERY client event(type:1,fd:92) was waked up
+2017-09-25 04:57:42.739055: (critical)network-mysqld.c:1865(network_mysqld_con_handle): event_thread(11) C:127.0.0.1:47730 C_usr:monitor CON_STATE_READ_QUERY close the noninteractive connection(127.0.0.1:47730) now because of timeout.
+2017-09-25 04:57:42.739098: (message)network-mysqld.c:468(network_mysqld_con_free): event_thread(0) C:127.0.0.1:47730 C_usr:monitor CON_STATE_ERROR connection closed
+2017-09-25 04:57:53.39112: (message)network-mysqld.c:2463(network_mysqld_con_accept): event_thread(5) C:127.0.0.1:41848 C_usr: CON_STATE_INIT new proxy connection accepted
+2017-09-25 04:57:53.41425: (message)chassis-event-thread.c:79(chassis_event_add): event_thread(0) C:127.0.0.1:41848 C_usr: CON_STATE_INIT connect add to event thread(1)'s async queue
+2017-09-25 04:57:53.41558: (message)proxy-plugin.c:2970(proxy_init): event_thread(1) C:127.0.0.1:41848 C_usr: CON_STATE_INIT proxy_init begin
+2017-09-25 04:57:53.41615: (message)proxy-plugin.c:2932(proxy_connect_server): event_thread(1) C:127.0.0.1:41848 C_usr: CON_STATE_CONNECT_SERVER proxy_connect_server begin
+2017-09-25 04:57:53.41659: (message)network-mysqld.c:1560(network_mysqld_con_handle): event_thread(1) C:127.0.0.1:41848 C_usr: CON_STATE_SEND_HANDSHAKE send handshake
+2017-09-25 04:57:53.41721: (message)network-mysqld.c:1613(network_mysqld_con_handle): event_thread(1) C:127.0.0.1:41848 C_usr: CON_STATE_READ_AUTH to read auth packet
+2017-09-25 04:57:53.41744: (message)network-mysqld.c:1620(network_mysqld_con_handle): event_thread(1) C:127.0.0.1:41848 C_usr: CON_STATE_READ_AUTH wait for client event(type:2,fd:92)
+2017-09-25 04:57:53.41835: (message)network-mysqld.c:1174(network_mysqld_con_handle): event_thread(1) C:127.0.0.1:41848 C_usr: CON_STATE_READ_AUTH client event(type:2,fd:92) was waked up
+2017-09-25 04:57:53.41856: (message)network-mysqld.c:1613(network_mysqld_con_handle): event_thread(1) C:127.0.0.1:41848 C_usr: CON_STATE_READ_AUTH to read auth packet
+2017-09-25 04:57:53.41876: (message)proxy-plugin.c:1071(proxy_read_auth): event_thread(1) C:127.0.0.1:41848 C_usr: CON_STATE_READ_AUTH proxy_read_auth begin
+2017-09-25 04:57:53.41909: (message)proxy-plugin.c:1128(proxy_read_auth): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_AUTH auth flag: capabilities:8365701 max_packet_size:16777216 charset:33 username:root database: response:c3856040
+2017-09-25 04:57:53.41952: (message)network-mysqld.c:1746(network_mysqld_con_handle): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_SEND_AUTH_RESULT send auth to client
+2017-09-25 04:57:53.41991: (message)network-mysqld.c:1770(network_mysqld_con_handle): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_QUERY [connect finished]
+2017-09-25 04:57:53.42007: (message)network-mysqld.c:1897(network_mysqld_con_handle): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_QUERY wait for client event(type:2,fd:92)
+2017-09-25 04:57:53.42141: (message)network-mysqld.c:1174(network_mysqld_con_handle): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_QUERY client event(type:2,fd:92) was waked up
+2017-09-25 04:57:53.42186: (message)network-mysqld.c:1925(network_mysqld_con_handle): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_QUERY read query:select @@version_comment limit 1
+2017-09-25 04:57:53.43437: (message)proxy-plugin.c:2088(proxy_read_query): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_QUERY sql parse success
+2017-09-25 04:57:53.43503: (message)proxy-plugin.c:2000(sql_rw_split): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_QUERY get read_only backend id:-1
+2017-09-25 04:57:53.43528: (message)proxy-plugin.c:2022(sql_rw_split): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_QUERY get read_write backend id:0
+2017-09-25 04:57:53.43541: (message)network-conn-pool.c:157(network_connection_pool_get)event_thread(1) pool(0x7f17c8c53640 Usr:root) has no entry list for C:127.0.0.1:41848
+2017-09-25 04:57:53.45412: (message)network-conn-pool-lua.c:464(network_connection_pool_lua_swap): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_QUERY backend(id:0 host:127.0.0.1:6000) pool have no connection of Usr: root
+2017-09-25 04:57:53.45532: (critical)network-conn-pool-lua.c:223(self_connect): event_thread(1) C:127.0.0.1:41848 C_usr:root C_db: S:127.0.0.1:6000(thread_id:0) connecting to backend failed: Connection refused(111)
+2017-09-25 04:57:53.45559: (message)network-conn-pool-lua.c:473(network_connection_pool_lua_swap): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_QUERY create new connection to backend(id:0 host:127.0.0.1:6000) failed
+2017-09-25 04:57:53.45572: (critical)proxy-plugin.c:2217(proxy_read_query): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_READ_QUERY I have no server backend, closing connection
+2017-09-25 04:57:53.45612: (message)network-mysqld.c:468(network_mysqld_con_free): event_thread(1) C:127.0.0.1:41848 C_usr:root CON_STATE_ERROR connection closed
+2017-09-25 04:57:54.815313: (message)network-mysqld.c:2463(network_mysqld_con_accept): event_thread(0) C:127.0.0.1:41852 C_usr: CON_STATE_INIT new proxy connection accepted
+2017-09-25 04:57:54.815367: (message)chassis-event-thread.c:79(chassis_event_add): event_thread(0) C:127.0.0.1:41852 C_usr: CON_STATE_INIT connect add to event thread(2)'s async queue
+2017-09-25 04:57:54.815669: (message)proxy-plugin.c:2970(proxy_init): event_thread(2) C:127.0.0.1:41852 C_usr: CON_STATE_INIT proxy_init begin
+2017-09-25 04:57:54.815721: (message)proxy-plugin.c:2932(proxy_connect_server): event_thread(2) C:127.0.0.1:41852 C_usr: CON_STATE_CONNECT_SERVER proxy_connect_server begin
+2017-09-25 04:57:54.815774: (message)network-mysqld.c:1560(network_mysqld_con_handle): event_thread(2) C:127.0.0.1:41852 C_usr: CON_STATE_SEND_HANDSHAKE send handshake
