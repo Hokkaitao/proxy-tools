@@ -1,0 +1,11 @@
+# Describe:
+将mysql.slow中每条SQL的输出整理成一行， 方便awk等工具的分析
+
+# Usage:
+1. make
+2. ./slowlog inputfile outputfile
+eg: ./slowlog mysql.slow mysql.out
+
+# Changelog
+2017.10.18 
+将mysql.slow中每条SQL的输出整理成一行， 方便awk等工具的分析
