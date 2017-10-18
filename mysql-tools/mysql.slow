@@ -1,0 +1,768 @@
+/usr/sbin/mysqld, Version: 5.7.18-16-log (Percona Server (GPL), Release 16, Revision d7301f8). started with:
+Tcp port: 0  Unix socket: /var/lib/mysql/mysql.sock
+Time                 Id Command    Argument
+# Time: 2017-10-17T07:56:09.436400Z
+# User@Host: [UNKNOWN_MYSQL_USER] @ localhost []  Id:     3
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000415  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 11
+SET timestamp=1508226969;
+# administrator command: Ping;
+# Time: 2017-10-17T07:56:09.436464Z
+# User@Host: [UNKNOWN_MYSQL_USER] @ localhost []  Id:     3
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000002  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 0
+SET timestamp=1508226969;
+# administrator command: Quit;
+# Time: 2017-10-17T07:56:53.864917Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000088  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 11
+SET timestamp=1508227013;
+SET AUTOCOMMIT=default;
+# Time: 2017-10-17T07:56:53.868097Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000083  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 121
+SET timestamp=1508227013;
+select @@version_comment limit 1;
+# Time: 2017-10-17T07:56:57.680167Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000102  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 64
+SET timestamp=1508227017;
+SELECT DATABASE();
+# Time: 2017-10-17T07:56:57.683535Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000044  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 11
+use test;
+SET timestamp=1508227017;
+# administrator command: Init DB;
+# Time: 2017-10-17T07:56:57.687248Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000413  Lock_time: 0.000092  Rows_sent: 10  Rows_examined: 10  Rows_affected: 0
+# Bytes_sent: 242
+SET timestamp=1508227017;
+show databases;
+# Time: 2017-10-17T07:56:57.690207Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000207  Lock_time: 0.000072  Rows_sent: 13  Rows_examined: 13  Rows_affected: 0
+# Bytes_sent: 284
+SET timestamp=1508227017;
+show tables;
+# Time: 2017-10-17T07:56:57.696468Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.003109  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 90
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.700061Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000180  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 83
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.703382Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000504  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 205
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.706128Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000142  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 221
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.710635Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000195  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 221
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.714382Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000171  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.718291Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000150  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.722015Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000203  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.727713Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 3005  Killed: 0
+# Query_time: 0.000351  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.732474Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000181  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.738158Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000257  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.741884Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000156  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 48
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:56:57.746430Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000212  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 50
+SET timestamp=1508227017;
+;
+# Time: 2017-10-17T07:57:01.817700Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000092  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 68
+SET timestamp=1508227021;
+SELECT DATABASE();
+# Time: 2017-10-17T07:57:01.820923Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000053  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 11
+SET timestamp=1508227021;
+# administrator command: Init DB;
+# Time: 2017-10-17T07:57:04.512529Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000076  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 68
+SET timestamp=1508227024;
+SELECT DATABASE();
+# Time: 2017-10-17T07:57:04.519594Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000039  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 11
+SET timestamp=1508227024;
+# administrator command: Init DB;
+# Time: 2017-10-17T07:57:08.203243Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000079  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 68
+SET timestamp=1508227028;
+SELECT DATABASE();
+# Time: 2017-10-17T07:57:08.209109Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    48
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000041  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 11
+SET timestamp=1508227028;
+# administrator command: Init DB;
+# Time: 2017-10-17T07:57:12.108747Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000087  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 121
+SET timestamp=1508227032;
+select @@version_comment limit 1;
+# Time: 2017-10-17T07:57:14.449161Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000080  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 64
+SET timestamp=1508227034;
+SELECT DATABASE();
+# Time: 2017-10-17T07:57:14.452050Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000037  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 11
+SET timestamp=1508227034;
+# administrator command: Init DB;
+# Time: 2017-10-17T07:57:14.456456Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000396  Lock_time: 0.000079  Rows_sent: 10  Rows_examined: 10  Rows_affected: 0
+# Bytes_sent: 242
+SET timestamp=1508227034;
+show databases;
+# Time: 2017-10-17T07:57:14.468509Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000311  Lock_time: 0.000154  Rows_sent: 13  Rows_examined: 13  Rows_affected: 0
+# Bytes_sent: 284
+SET timestamp=1508227034;
+show tables;
+# Time: 2017-10-17T07:57:14.471681Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000124  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 90
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.477610Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000138  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 83
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.480777Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000061  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 205
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.486492Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000053  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 221
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.492679Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000062  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 221
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.495922Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000057  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.502800Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000060  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.512946Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000078  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.519096Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 3005  Killed: 0
+# Query_time: 0.000232  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.523214Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000046  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.525704Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000060  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.530607Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000043  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 48
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:14.533170Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000063  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 50
+SET timestamp=1508227034;
+;
+# Time: 2017-10-17T07:57:15.558677Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    65
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000010  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 0
+SET timestamp=1508227035;
+# administrator command: Quit;
+# Time: 2017-10-17T07:57:18.757919Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000119  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 121
+SET timestamp=1508227038;
+select @@version_comment limit 1;
+# Time: 2017-10-17T07:57:20.553588Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000083  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 64
+SET timestamp=1508227040;
+SELECT DATABASE();
+# Time: 2017-10-17T07:57:20.561049Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000056  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 11
+SET timestamp=1508227040;
+# administrator command: Init DB;
+# Time: 2017-10-17T07:57:20.568398Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000455  Lock_time: 0.000086  Rows_sent: 10  Rows_examined: 10  Rows_affected: 0
+# Bytes_sent: 242
+SET timestamp=1508227040;
+show databases;
+# Time: 2017-10-17T07:57:20.573890Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000191  Lock_time: 0.000060  Rows_sent: 13  Rows_examined: 13  Rows_affected: 0
+# Bytes_sent: 284
+SET timestamp=1508227040;
+show tables;
+# Time: 2017-10-17T07:57:20.581991Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000118  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 90
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.600562Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000111  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 83
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.617358Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000138  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 205
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.621456Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000091  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 221
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.625909Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000107  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 221
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.632682Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000110  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.637040Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000111  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.640692Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000135  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.644040Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 3005  Killed: 0
+# Query_time: 0.000208  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.649145Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000094  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.652348Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000114  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.656618Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000078  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 48
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:20.660287Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000091  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 50
+SET timestamp=1508227040;
+;
+# Time: 2017-10-17T07:57:28.071647Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000256  Lock_time: 0.000124  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508227048;
+select * from t1;
+# Time: 2017-10-17T07:57:30.509382Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000176  Lock_time: 0.000080  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508227050;
+select * from t1;
+# Time: 2017-10-17T07:57:31.141484Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000199  Lock_time: 0.000106  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508227051;
+select * from t1;
+# Time: 2017-10-17T07:57:31.736247Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000160  Lock_time: 0.000074  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508227051;
+select * from t1;
+# Time: 2017-10-17T07:57:32.336502Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000160  Lock_time: 0.000075  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508227052;
+select * from t1;
+# Time: 2017-10-17T07:57:33.291803Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000161  Lock_time: 0.000078  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508227053;
+select * from t1;
+# Time: 2017-10-17T07:57:33.876759Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000183  Lock_time: 0.000091  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508227053;
+select * from t1;
+# Time: 2017-10-17T07:57:34.390103Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000172  Lock_time: 0.000072  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508227054;
+select * from t1;
+# Time: 2017-10-17T07:57:34.888095Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000175  Lock_time: 0.000077  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508227054;
+select * from t1;
+# Time: 2017-10-17T07:57:35.968457Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    74
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000006  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 0
+SET timestamp=1508227055;
+# administrator command: Quit;
+# Time: 2017-10-17T07:57:36.692299Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    94
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000082  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 121
+SET timestamp=1508227056;
+select @@version_comment limit 1;
+# Time: 2017-10-17T07:57:39.956833Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    94
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000006  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 0
+SET timestamp=1508227059;
+# administrator command: Quit;
+# Time: 2017-10-17T07:57:40.634419Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    99
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000110  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 121
+SET timestamp=1508227060;
+select @@version_comment limit 1;
+# Time: 2017-10-17T07:57:42.173313Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    99
+# Schema:   Last_errno: 1046  Killed: 0
+# Query_time: 0.000073  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 33
+SET timestamp=1508227062;
+select * from t1;
+# Time: 2017-10-17T07:57:43.181620Z
+# User@Host: root[root] @  [172.18.177.11]  Id:    99
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000006  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 0
+SET timestamp=1508227063;
+# administrator command: Quit;
+# Time: 2017-10-17T08:16:19.659128Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000073  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 11
+SET timestamp=1508228179;
+SET AUTOCOMMIT=default;
+# Time: 2017-10-17T08:16:19.662627Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000085  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 121
+SET timestamp=1508228179;
+select @@version_comment limit 1;
+# Time: 2017-10-17T08:16:24.185766Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema:   Last_errno: 0  Killed: 0
+# Query_time: 0.000076  Lock_time: 0.000000  Rows_sent: 1  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 64
+SET timestamp=1508228184;
+SELECT DATABASE();
+# Time: 2017-10-17T08:16:24.189000Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000041  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 11
+SET timestamp=1508228184;
+# administrator command: Init DB;
+# Time: 2017-10-17T08:16:24.193379Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000393  Lock_time: 0.000076  Rows_sent: 10  Rows_examined: 10  Rows_affected: 0
+# Bytes_sent: 242
+SET timestamp=1508228184;
+show databases;
+# Time: 2017-10-17T08:16:24.197805Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000229  Lock_time: 0.000059  Rows_sent: 13  Rows_examined: 13  Rows_affected: 0
+# Bytes_sent: 284
+SET timestamp=1508228184;
+show tables;
+# Time: 2017-10-17T08:16:24.203944Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000105  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 90
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.206688Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000062  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 83
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.212809Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000067  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 205
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.215808Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000069  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 221
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.219151Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000059  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 221
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.222348Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000075  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.225561Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000064  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.229234Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000077  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 160
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.234473Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 3005  Killed: 0
+# Query_time: 0.000240  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.243407Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000148  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.246196Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000047  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 46
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.249485Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000050  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 48
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:24.252507Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000058  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 50
+SET timestamp=1508228184;
+;
+# Time: 2017-10-17T08:16:27.066333Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000214  Lock_time: 0.000112  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508228187;
+select * from t1;
+# Time: 2017-10-17T08:16:36.512221Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 1054  Killed: 0
+# Query_time: 0.000147  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 49
+SET timestamp=1508228196;
+select * from t1 where a = 1;
+# Time: 2017-10-17T08:16:42.016681Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 1054  Killed: 0
+# Query_time: 0.000110  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 49
+SET timestamp=1508228202;
+select * from t1 where b = 1;
+# Time: 2017-10-17T08:16:45.276622Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 1054  Killed: 0
+# Query_time: 0.000112  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 49
+SET timestamp=1508228205;
+select * from t1 where b = 1;
+# Time: 2017-10-17T08:16:47.830932Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000284  Lock_time: 0.000093  Rows_sent: 13  Rows_examined: 13  Rows_affected: 0
+# Bytes_sent: 284
+SET timestamp=1508228207;
+show tables;
+# Time: 2017-10-17T08:16:57.963886Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 1054  Killed: 0
+# Query_time: 0.000112  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 49
+SET timestamp=1508228217;
+select * from t1 where a=1;
+# Time: 2017-10-17T08:17:02.031489Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000183  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 185
+SET timestamp=1508228222;
+show create table t1;
+# Time: 2017-10-17T08:17:08.211957Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000267  Lock_time: 0.000123  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508228228;
+select * from t1 where i=1;
+# Time: 2017-10-17T08:17:09.833648Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000181  Lock_time: 0.000086  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508228229;
+select * from t1 where i=1;
+# Time: 2017-10-17T08:17:18.281246Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 1064  Killed: 0
+# Query_time: 0.000105  Lock_time: 0.000000  Rows_sent: 0  Rows_examined: 0  Rows_affected: 0
+# Bytes_sent: 173
+SET timestamp=1508228238;
+select * from t1 '\n' where i=1;
+# Time: 2017-10-17T08:17:38.253494Z
+# User@Host: root[root] @  [172.18.177.11]  Id:  1214
+# Schema: test  Last_errno: 0  Killed: 0
+# Query_time: 0.000254  Lock_time: 0.000127  Rows_sent: 1  Rows_examined: 1  Rows_affected: 0
+# Bytes_sent: 65
+SET timestamp=1508228258;
+select * from t1 
+ where i=1;
