@@ -6,6 +6,10 @@
 2. ./slowlog inputfile outputfile
 eg: ./slowlog mysql.slow mysql.out
 
+# Furture
+1. format slowlog, 方便awk分析
+2. 优化IO_CACHE
+
 # Changelog
 2017.10.18 
 将mysql.slow中每条SQL的输出整理成一行， 方便awk等工具的分析
