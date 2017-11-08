@@ -15,6 +15,16 @@
 
 可能是MySQL协议的修改导致的。
 
+5. client的jdbc串中使用不存在的db名，会出现部分连接成功执行，有些却无法成功执行，在日志中显示db的名字不正确。日志中类似如下：
+```
+2017-11-08 12:02:02.827187: C_begin:2017-11-08 12:02:02.825994 C:172.18.177.11:58981 C_db:${database} C_usr:root S:10.4.230.14:3306(thread_id:1079797) S_db:${database} S_usr:root inj(type:4 bytes:18 rows:3) 1.146(ms) OK Query:select * from t1
+```
+
+该问题是atlas中在client-socket与server-socket的变量矫正时，由于use db语句出错没有检查而导致的。当连接池里有可用连接时，虽然use db没有成功，但是后续SQL执行成功了；当连接池没有可用连接时，会报错。
+
+6. proxy中有些client连接来的连接会有不释放的风险。
+
+
 ## DBProxy常见问题分析
 1. 客户端报错: I have no server backend
 
