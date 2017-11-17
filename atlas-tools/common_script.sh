@@ -14,6 +14,9 @@ cat proxy_sql.log|awk '{print $5}'|awk -F ':' '{print $2}'|sort |uniq -c |sort -
 4. 统计proxy是否负载均衡
 grep "2017-11-09" /opt/ght.sql|awk '{h=index($2, ":");h1=substr($2, 0, h - 1);if((h1+0)>=1 &&(h1+0)<=3){print}}'|awk '{p=index($8, "(");p1=substr($8, 0, p-1);s[p1]++}END{for(i in s){print i, s[i]}}'|less
 
+5. 查找proxy中是否有未commit的sql
+grep "2017-" proxy_sql.log|grep -v "Slow Query"|awk '{if($NF=="autocommit=0") {ac[$8]=1;ct[$8]=0;}if(ac[$8]==1&&($NF!="autocommit=1"||$NF!="Query:commit"||$NF!="autocommit=0")){ct[$8]++;};if($NF=="autocommit=1"||$NF=="Query:commit"||$NF=="autocommit=0") {if($NF!="autocommit=0"){ac[$8]=0;}else {ac[$8]=1;};ct[$8]=0;}}END{for(i in ct){if(ct[i]!=0){print i, ct[i];}}}'
+
 # proxy_admin.log
 1. 统计work thread 的负载
 grep "event_thread" proxy_admin.log|grep "create backend connection success"|awk 'BEGIN{a1;a2;a3;a4;a5;a6;a7;a8;a9;a10;a11;a12;a13;a14;a15;a16;}{a=index($4, "(");b=index($4, ")");c=substr($4, a+1, b-a-1);d=c+0;if(d == 0){a1++;};if(d == 1){a2++;};if(d == 2){a3++;};if(d == 3){a4++;};if(d == 4){a5++;};if(d == 5){a6++;};if(d == 6){a7++;};if(d == 7){a8++;};if(d == 8){a9++};if(d == 9){a10++;};if(d == 10){a11++;};if(d == 11){a12++;};if(d == 12){a13++;};if(d == 13){a14++;};if(d == 14){a15++;};if(d == 15){a16++;}}END{print a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16}'
