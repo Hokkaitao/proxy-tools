@@ -1378,7 +1378,7 @@ void handle() {
 				//清空计数器，设置隐式事务标志，获取时间
 				TRANSINFO p = (TRANSINFO)lt->data;
 				p->set_autocommit = logRecord.set_autocommit;
-				if(p->set_autocommit == 1) {
+				if(p->set_autocommit == 0) {
 					p->sql_time = logRecord.sql_time;
 					p->sql_us = logRecord.sql_us;
 				} else {
