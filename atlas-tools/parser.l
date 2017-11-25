@@ -527,7 +527,7 @@ typedef struct _transInfo{
 	long sql_us;
 	int count;
 	int forUpdate;
-	struct tm sql_update;
+	struct tm update_time;
 	long update_us;
 }TransInfo, *TRANSINFO;
 TRANSINFO newTransInfo(LogRecord record) {
@@ -1076,12 +1076,12 @@ gint count_latency_compare(gconstpointer item1, gconstpointer item2) {
         return 1;
     }
 }
-void trans_callback(gpointer data, gpointer user_data) {
+void update_callback(gpointer data, gpointer user_data) {
 	TRANSINFO p = (TRANSINFO)data;
 	if(p->forUpdate) {
 		char time[MAX_STRING_LEN] = {""};
 		formatTick(mktime(&(p->update_time)), time);
-		fprintf(yyout, "thread_id: %10ld  maybe contain \"for update\" in transaction at %s.%ld\n", p->thread_id, time, p->update_us);
+		fprintf(yyout, "thread_id: %10ld  maybe contain %d \"for update\" in transaction last at %s.%ld\n", p->thread_id, p->forUpdate, time, p->update_us);
 	}
 }
 void trans_callback(gpointer data, gpointer user_data) {
@@ -1433,7 +1433,9 @@ void handle() {
 					if(checkForUpdate && logRecord.sql_type == SQL_TYPE_SELECT) {
 						char *pos = strcasestr(logRecord.sql->str, "for update");
 						if(pos) {
-							p->forUpdate = 1;
+							p->forUpdate++;
+							p->update_time = logRecord.sql_time;
+							p->update_us = logRecord.sql_us;
 						}
 					}
 				}
