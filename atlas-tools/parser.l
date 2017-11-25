@@ -1377,12 +1377,18 @@ void handle() {
 			} else {
 				//清空计数器，设置隐式事务标志，获取时间
 				TRANSINFO p = (TRANSINFO)lt->data;
-				p->sql_time = logRecord.sql_time;
-				p->sql_us = logRecord.sql_us;
 				p->set_autocommit = logRecord.set_autocommit;
+				if(p->sql_time == 1) {
+					p->sql_time = logRecord.sql_time;
+					p->sql_us = logRecord.sql_us;
+				} else {
+					//如果有未提交的事务，将隐式事务转换成显示事务
+					if(p->count) {
+						p->startTrans = 1;
+					}
+				}
 			}
 		} else if(logRecord.start_trans) {//检查显示事务
-			//如果开启隐式事务，显示事务开启则认为是一次提交
 			GList *lt = g_list_find_custom(list_trans, &logRecord.thread_id, trans_compare);					
 			if(lt == NULL) {
 				TRANSINFO p = newTransInfo(logRecord);
@@ -1393,6 +1399,7 @@ void handle() {
 				p->sql_time = logRecord.sql_time;
 				p->sql_us = logRecord.sql_us;
 				p->startTrans = 1;
+				//之前的事务全部提交
 				p->count = 0;
 			}
 		} else if(logRecord.end_trans) {//无论显示隐式事务都需要commit
