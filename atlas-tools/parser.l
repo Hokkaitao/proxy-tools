@@ -91,7 +91,7 @@ lineblank [ ]
 <STATE_META>"[Slow Query]" {return SQL_SLOW;}
 <STATE_META>. {return SQL_OTHER;}
 <STATE_SQL>"/*"[^*]*[*]+([^*/][^*]*[*]+)*[*]*"/" {return SQL_ANNOTATION;}
-<STATE_SQL>add|all|alter|and|any|as|asc|avg|by|char(acter)?|column|create|cascade|constraint|date|distinct|double|default|default|delete|desc|drop|exists|foreign|float|from|group|having|in|index|insert|into|is|int(eger)?|join|key|left|like|max|min|not|null|or|order|outer|primary|real|references|right|schema|select|set|smallint|sum|table|union|unique|update|value(s)?|varchar|where {return SQL_KEYWORD;}
+<STATE_SQL>accessible|account|action|add|after|against|aggregate|algorithm|all|alter|always|analyse|analyze|and|any|as|asc|ascii|asensitive|at|autoextend_size|auto_increment|avg|avg_row_length|backup|before|begin|between|begin|binary|binlog|bit|blob|block|bool|boolean|both|btree|by|byte|cache|call|cascade|cascaded|case|catalog_name|chain|change|changed|channel|char(acter)?|character|charset|check|checksum|cipher|class_origin|client|close|coalesce|code|collate|collation|column|columns|column_format|column_name|comment|commit|commited|compact|completion|compressed|compression|concurrent|condition|connection|consistent|constraint|constraint_catalog|constraint_name|constraint_schema|contains|context|continue|convert|cpu|create|cross|cube|current|current_date|current_time|current_timestamp|current_user|cursor|cursor_name|date|database|databases|datafile|date|datetime|day|day_hour|day_microsecond|day_minute|day_second|deallocate|dec|decimal|declare|default|default_auth|definer|delayed|delay_key_write|delete|desc|describe|des_key_file|deterministic|diagnostics|directory|disable|discard|disk|distinct|distinctrow|div|do|double|drop|dual|dumpfile|duplicate|dynamic|each|else|exists|foreign|float|from|group|having|in|index|insert|into|is|int(eger)?|join|key|left|like|max|min|not|null|or|order|outer|primary|real|references|right|schema|select|set|smallint|sum|table|union|unique|update|value(s)?|varchar|where {return SQL_KEYWORD;}
 <STATE_SQL>[A-Za-z_][A-Z0a-z0-9_]* {return SQL_IDENTIFIER;}
 <STATE_SQL>[(] {return SQL_LEFTBRACKET;}
 <STATE_SQL>[)] {return SQL_RIGHTBRACKET;}
@@ -704,7 +704,7 @@ void check(int c) {
         }
         case SQL_TEXTSTRING: {
             g_string_append_printf(logRecord.sql, "%s ", yytext);
-            g_string_append_printf(logRecord.prototype, "\"?\" ");
+            g_string_append_printf(logRecord.prototype, "? ");
             break;
         }
         case SQL_COMMA: {
