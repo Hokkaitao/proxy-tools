@@ -1282,7 +1282,7 @@ void handle() {
 			fprintf(yyout, "%s\n", p->str);
 			g_string_free(p, TRUE);
 		}
-	} else if(sqlKey!='\0') {
+	} else if(sqlKey[0]!='\0') {
 		char *pos = strcasestr(logRecord.sql->str, sqlKey);
 		if(pos != NULL) {
 			GString *p = g_string_new(NULL);
@@ -1332,7 +1332,7 @@ int main(int argc, char **argv) {
                 printf(help, argv[0], argv[0], argv[0], argv[0],argv[0],
                 argv[0], argv[0], argv[0], argv[0], argv[0], 
                 argv[0], argv[0], argv[0], argv[0], argv[0],
-				argv[0], argv[0], argv[0]);
+				argv[0], argv[0], argv[0], argv[0]);
                 exit(1);
             }
             case 'f': {
