@@ -1073,7 +1073,7 @@ void trans_callback(gpointer data, gpointer user_data) {
 	if(p->count>0) {
 		char time[MAX_STRING_LEN] = {""};
 		formatTick(mktime(&(p->sql_time)), time);
-		fprintf(yyout, "thread_id: %10ld  maybe %5ld uncommitted, last uncommitted SQL log at %s.%ld\n", p->thread_id, p->count, time, p->sql_us);
+		fprintf(yyout, "thread_id: %10ld  maybe %5ld uncommitted last at %s.%ld\n", p->thread_id, p->count, time, p->sql_us);
 	}
 }
 void prototype_callback(gpointer data, gpointer user_data) {
