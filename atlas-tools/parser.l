@@ -42,6 +42,10 @@
 #define SQL_VALUE 109
 #define SQL_INVALID 110
 
+#define SQL_KEY_START_TRANS 201
+#define SQL_KEY_END_TRANS 202
+#define SQL_KEY_AUTOCOMMIT 203
+
 #define SQL_TYPE_INSERT 0x1
 #define SQL_TYPE_UPDATE 0x2
 #define SQL_TYPE_DELETE 0x4
@@ -91,6 +95,9 @@ lineblank [ ]
 <STATE_META>"[Slow Query]" {return SQL_SLOW;}
 <STATE_META>. {return SQL_OTHER;}
 <STATE_SQL>"/*"[^*]*[*]+([^*/][^*]*[*]+)*[*]*"/" {return SQL_ANNOTATION;}
+<START_SQL>start|begin {return SQL_KEY_START_TRANS;}
+<START_SQL>commit|rollback {return SQL_KEY_END_TRANS;}
+<START_SQL>autocommit {return SQL_KEY_AUTOCOMMIT;}
 <STATE_SQL>add|all|alter|and|any|as|asc|avg|by|char(acter)?|column|create|cascade|constraint|date|distinct|double|default|default|delete|desc|drop|exists|foreign|float|from|group|having|in|index|insert|into|is|int(eger)?|join|key|left|like|max|min|not|null|or|order|outer|primary|real|references|right|schema|select|set|smallint|sum|table|union|unique|update|value(s)?|varchar|where {return SQL_KEYWORD;}
 <STATE_SQL>[A-Za-z_][A-Z0a-z0-9_]* {return SQL_IDENTIFIER;}
 <STATE_SQL>[(] {return SQL_LEFTBRACKET;}
@@ -368,6 +375,10 @@ typedef struct _log_record {
     GString *prototype;
     char signature[MAX_STRING_LEN];
 	char annotation[MAX_STRING_LEN];
+
+	int start_trans;
+	int end_trans;
+	int set_autocommit;
 }LogRecord, *LOGRECORD;
 
 void get_date(const int year, const int time, char *dst) {
@@ -511,6 +522,7 @@ void freeLogRecord(gpointer p) {
 typedef struct _transInfo{
     int thread_id;
     int startTrans;
+	int set_autocommit;
 	struct tm sql_time;		 
 	int count;
 }TransInfo, *TRANSINFO;
@@ -518,9 +530,10 @@ TRANSINFO newTransInfo(LogRecord record) {
 	TRANSINFO p = (TRANSINFO)malloc(sizeof(TransInfo));
 	memset(p, 0, sizeof(TRANSINFO));
 	p->thread_id = record.thread_id;
-	p->startTrans = 0;
+	p->startTrans = record.start_trans;
 	p->sql_time = record.sql_time;
 	p->count = 0;
+	p->set_autocommit = record.set_autocommit;
 	return p;
 }
 void freeTransInfo(TRANSINFO p) {
@@ -534,9 +547,11 @@ GHashTable *table_client = NULL;
 GList *list_slow = NULL;
 GList *list_threadId = NULL;
 GList *list_prototype = NULL;
-GList *list_latency;
+GList *list_latency = NULL;
 long long latency_count[8] = {0};
 GList *list_signature = NULL;
+
+GList *list_trans = NULL;
 
 void handle();
 void check(int c) {
@@ -687,6 +702,24 @@ void check(int c) {
             }
             break;
         }
+		case SQL_KEY_START_TRANS: {
+			g_string_append_printf(logRecord.sql, "%s ", yytext);
+			g_string_append_printf(logRecord.prototype, "%s ", yytext);
+			logRecord.start_trans = 1;
+			break;
+		}
+		case SQL_KEY_END_TRANS: {
+			g_string_append_printf(logRecord.sql, "%s ", yytext);
+			g_string_append_printf(logRecord.prototype, "%s ", yytext);
+			logRecord.end_trans = 1;
+			break;
+		}
+		case SQL_KEY_AUTOCOMMIT: {
+			g_string_append_printf(logRecord.sql, "%s ", yytext);
+			g_string_append_printf(logRecord.prototype, "%s ", yytext);
+			logRecord.set_autocommit = 10;
+			break;
+		}
         case SQL_KEYWORD: {
             g_string_append_printf(logRecord.sql, "%s ", yytext);
             g_string_append_printf(logRecord.prototype, "%s ", yytext);
@@ -845,6 +878,8 @@ char sqlKey[MAX_SQL_KEY_LEN] = {""};
 
 int extractSQL = 0;
 
+int checkTrans = 0;
+
 int init = 0;
 int checkTimeSatisfy(long long time) {
     int ret = 1;
@@ -992,6 +1027,12 @@ gint prototype_compare(gconstpointer item1, gconstpointer item2) {
     char *p2 = (char *)item2;
     return strcmp(p1->signature, p2);
 }
+gint trans_compare(gconstpointer item1, gconstpointer item2) {
+	if(item1 == NULL || item2 == NULL) return -1;
+	TRANSINFO p = (TRANSINFO)item1;
+	int *q = (int *)item2;
+	return *q == p->thread_id?0:-1;
+} 
 gint avg_latency_compare(gconstpointer item1, gconstpointer item2) {
     LOGPROTOTYPE p1 = (LOGPROTOTYPE)item1;
     LOGPROTOTYPE p2 = (LOGPROTOTYPE)item2;
@@ -1024,6 +1065,14 @@ gint count_latency_compare(gconstpointer item1, gconstpointer item2) {
     } else {
         return 1;
     }
+}
+void trans_callback(gpointer data, gpointer user_data) {
+	TRANSINFO p = (TRANSINFO)data;
+	if(p->count>0) {
+		char time[MAX_STRING_LEN] = {""};
+		formatTick(mktime(p->sql_time), time);
+		fprintf(yyout, "thread_id: %10ld  maybe %5ld uncommited at %s\n", p->thread_id, p->count, time);
+	}
 }
 void prototype_callback(gpointer data, gpointer user_data) {
     LOGPROTOTYPE p = (LOGPROTOTYPE)data;
@@ -1310,6 +1359,59 @@ void handle() {
 		}
 	} else if(extractSQL) {
 		fprintf(yyout, "%s\n", logRecord.sql->str);
+	} else if(checkTrans) {
+		//检查隐式事务
+		if(logRecord.set_autocommit == 10) {
+			char *pos = strcasestr(logRecord.log->str, "set autocommit = 1");
+			if(pos) {
+				logRecord.set_autocommit = 1;
+			} else {
+				logRecord.set_autocommit = 0;
+			}
+			GList *lt = g_list_find_custom(list_trans, &logRecord.thread_id, trans_compare);					
+			if(lt == NULL) {
+				TRANSINFO *p = newTransInfo(logRecord);
+				list_trans = g_list_append(list_trans, p);
+			} else {
+				TRANSINFO *p = (TRANSINFO)lt->data;
+				p->sql_time = logRecord.sql_time;
+				p->startTrans = 0;
+				p->count = 0;
+				p->set_autocommit = logRecord.set_autocommit;
+			}
+		} else if(logRecord.start_trans) {//检查显示事务
+			//如果开启隐式事务，显示事务开启则认为是一次提交
+			GList *lt = g_list_find_custom(list_trans, &logRecord.thread_id, trans_compare);					
+			if(lt == NULL) {
+				TRANSINFO *p = newTransInfo(logRecord);
+				list_trans = g_list_append(list_trans, p);
+			} else {
+				TRANSINFO *p = (TRANSINFO)lt->data;
+				p->sql_time = logRecord.sql_time;
+				p->startTrans = 1;
+				p->count = 0;
+			}
+		} else if(logRecord.end_trans) {//无论显示隐式事务都需要commit
+			GList *lt = g_list_find_custom(list_trans, &logRecord.thread_id, trans_compare);					
+			if(lt == NULL) {
+				//do nothing
+			} else {
+				TRANSINFO *p = (TRANSINFO)lt->data;
+				p->sql_time = logRecord.sql_time;
+				p->startTrans = 0;//显示事务结束
+				p->count = 0;
+			}
+		} else {
+			GList *lt = g_list_find_custom(list_trans, &logRecord.thread_id, trans_compare);					
+			if(lt == NULL) {
+				//do nothing
+			} else {
+				TRANSINFO *p = (TRANSINFO)lt->data;
+				if(p->startTrans || p->set_autocommit == 0) {
+					p->count++;
+				}
+			}
+		}
 	}
 end:
     //check time
@@ -1344,7 +1446,7 @@ int checkTimeFormat(const char * src) {
 }
 int main(int argc, char **argv) {
     int c, ch;
-    while((ch = getopt(argc, argv, "rafhpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
+    while((ch = getopt(argc, argv, "zrafhpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
         switch(ch) {
             case 'h': {
                 printf(help, argv[0], argv[0], argv[0], argv[0],argv[0],
@@ -1486,6 +1588,10 @@ int main(int argc, char **argv) {
 				extractSQL = 1;				
 				break;
 			 }
+			 case 'z': {
+				checkTrans = 1;
+				break;
+		     }
          }//~switch
     }//~while
     //must have -i -o
@@ -1569,7 +1675,11 @@ int main(int argc, char **argv) {
         }
     } else if(signature32[0] != '\0') {
         
-    }
+    } elsf if(checkTrans) {
+		g_list_foreach(list_trans, trans_callback, NULL);
+		g_list_free_full(list_trans, freeTransInfo);
+		list_trans = NULL;
+	}
     fclose(yyin);
     fclose(yyout);
     printf("\n");
