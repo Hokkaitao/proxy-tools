@@ -526,6 +526,9 @@ typedef struct _transInfo{
 	struct tm sql_time;		 
 	long sql_us;
 	int count;
+	int forUpdate;
+	struct tm sql_update;
+	long update_us;
 }TransInfo, *TRANSINFO;
 TRANSINFO newTransInfo(LogRecord record) {
 	TRANSINFO p = (TRANSINFO)malloc(sizeof(TransInfo));
@@ -824,6 +827,8 @@ char *help = "\
       -n num                         ## 间隔数,必须和-u 配合使用\n\
       -c num                         ## 按类型过滤日志, num 1:insert 2:update 4:delete 8:select 16:other\n\
       -r                             ## 只抽取SQL语句\n\
+      -z                             ## 检测是否有未提交的事务(日志切割等原因结果不一定准确,需要人工确认)\n\
+      -y                             ## 检测是否有事务中的select ... for update\n\
 \n[使用例子]:\n\
       %s -h  #help info \n\n\
       %s -i inputfile -o outputfile -f # 格式化日志 \n\
@@ -844,6 +849,8 @@ char *help = "\
       %s -i inputfile -o outputfile -l 10.1.1.1:1234  ## 过滤发往DB为10.1.1.1:1234的日志\n\
       %s -i inputfile -o outputfile -k \"set autocommit\"  ## 过滤SQL中包含set autocommit 的日志\n\
       %s -i inputfile -o outputfile -r ## 抽取SQL语句\n\
+      %s -i inputfile -o outputfile -z ## 检测是否有未提交事务\n\
+      %s -i inputfile -o outputfile -y ## 检测是否有事务中的select ... for update\n\
 \n[说明]:\n\
       输出的每个.代表已经处理了约3万行日志\n\
       如果一段时间没有输出.,则可能输入文件有误或是文件内容格式有误\n\n\
@@ -881,6 +888,7 @@ char sqlKey[MAX_SQL_KEY_LEN] = {""};
 int extractSQL = 0;
 
 int checkTrans = 0;
+int checkForUpdate = 0;
 
 int init = 0;
 int checkTimeSatisfy(long long time) {
@@ -1067,6 +1075,14 @@ gint count_latency_compare(gconstpointer item1, gconstpointer item2) {
     } else {
         return 1;
     }
+}
+void trans_callback(gpointer data, gpointer user_data) {
+	TRANSINFO p = (TRANSINFO)data;
+	if(p->forUpdate) {
+		char time[MAX_STRING_LEN] = {""};
+		formatTick(mktime(&(p->update_time)), time);
+		fprintf(yyout, "thread_id: %10ld  maybe contain \"for update\" in transaction at %s.%ld\n", p->thread_id, time, p->update_us);
+	}
 }
 void trans_callback(gpointer data, gpointer user_data) {
 	TRANSINFO p = (TRANSINFO)data;
@@ -1361,7 +1377,7 @@ void handle() {
 		}
 	} else if(extractSQL) {
 		fprintf(yyout, "%s\n", logRecord.sql->str);
-	} else if(checkTrans) {
+	} else if(checkTrans || checkForUpdate) {
 		//检查隐式事务
 		if(logRecord.set_autocommit == 10) {
 			char *pos = strcasestr(logRecord.sql->str, "set autocommit = 1");
@@ -1414,6 +1430,12 @@ void handle() {
 					p->sql_time = logRecord.sql_time;
 					p->sql_us = logRecord.sql_us;
 					p->count++;
+					if(checkForUpdate && logRecord.sql_type == SQL_TYPE_SELECT) {
+						char *pos = strcasestr(logRecord.sql->str, "for update");
+						if(pos) {
+							p->forUpdate = 1;
+						}
+					}
 				}
 			}
 		}
@@ -1451,13 +1473,14 @@ int checkTimeFormat(const char * src) {
 }
 int main(int argc, char **argv) {
     int c, ch;
-    while((ch = getopt(argc, argv, "zrafhpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
+    while((ch = getopt(argc, argv, "yzrafhpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
         switch(ch) {
             case 'h': {
                 printf(help, argv[0], argv[0], argv[0], argv[0],argv[0],
                 argv[0], argv[0], argv[0], argv[0], argv[0], 
                 argv[0], argv[0], argv[0], argv[0], argv[0],
-				argv[0], argv[0], argv[0], argv[0]);
+				argv[0], argv[0], argv[0], argv[0], argv[0], 
+				argv[0]);
                 exit(1);
             }
             case 'f': {
@@ -1597,6 +1620,10 @@ int main(int argc, char **argv) {
 				checkTrans = 1;
 				break;
 		     }
+			 case 'y': {
+				checkForUpdate = 1;
+				break;
+			 }
          }//~switch
     }//~while
     //must have -i -o
@@ -1682,6 +1709,10 @@ int main(int argc, char **argv) {
         
     } else if(checkTrans) {
 		g_list_foreach(list_trans, trans_callback, NULL);
+		g_list_free_full(list_trans, freeTransInfo);
+		list_trans = NULL;
+	} else if(checkForUpdate) {
+		g_list_foreach(list_trans, update_callback, NULL);
 		g_list_free_full(list_trans, freeTransInfo);
 		list_trans = NULL;
 	}
