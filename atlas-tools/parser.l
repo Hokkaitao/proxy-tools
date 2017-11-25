@@ -1375,12 +1375,10 @@ void handle() {
 				TRANSINFO p = newTransInfo(logRecord);
 				list_trans = g_list_append(list_trans, p);
 			} else {
-				//清空计数器，设置隐式事务标志，获取时间，显示事务提交
+				//清空计数器，设置隐式事务标志，获取时间
 				TRANSINFO p = (TRANSINFO)lt->data;
 				p->sql_time = logRecord.sql_time;
 				p->sql_us = logRecord.sql_us;
-				p->startTrans = 0;
-				p->count = 0;
 				p->set_autocommit = logRecord.set_autocommit;
 			}
 		} else if(logRecord.start_trans) {//检查显示事务
@@ -1406,7 +1404,7 @@ void handle() {
 				p->sql_time = logRecord.sql_time;
 				p->sql_us = logRecord.sql_us;
 				p->startTrans = 0;//显示事务结束
-				p->count = 0;
+				p->count = 0;//唯一清除计数器
 			}
 		} else {
 			GList *lt = g_list_find_custom(list_trans, &logRecord.thread_id, trans_compare);					
