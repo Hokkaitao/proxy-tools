@@ -524,6 +524,7 @@ typedef struct _transInfo{
     int startTrans;
 	int set_autocommit;
 	struct tm sql_time;		 
+	long sql_us;
 	int count;
 }TransInfo, *TRANSINFO;
 TRANSINFO newTransInfo(LogRecord record) {
@@ -534,6 +535,7 @@ TRANSINFO newTransInfo(LogRecord record) {
 	p->sql_time = record.sql_time;
 	p->count = 0;
 	p->set_autocommit = record.set_autocommit;
+	p->sql_us = record.sql_us;
 	return p;
 }
 void freeTransInfo(gpointer p) {
@@ -1071,7 +1073,7 @@ void trans_callback(gpointer data, gpointer user_data) {
 	if(p->count>0) {
 		char time[MAX_STRING_LEN] = {""};
 		formatTick(mktime(&(p->sql_time)), time);
-		fprintf(yyout, "thread_id: %10ld  maybe %5ld uncommited at %s\n", p->thread_id, p->count, time);
+		fprintf(yyout, "thread_id: %10ld  maybe %5ld uncommited at %s.%ld\n", p->thread_id, p->count, time, p->sql_us);
 	}
 }
 void prototype_callback(gpointer data, gpointer user_data) {
@@ -1373,8 +1375,10 @@ void handle() {
 				TRANSINFO p = newTransInfo(logRecord);
 				list_trans = g_list_append(list_trans, p);
 			} else {
+				//清空计数器，设置隐式事务标志，获取时间，显示事务提交
 				TRANSINFO p = (TRANSINFO)lt->data;
 				p->sql_time = logRecord.sql_time;
+				p->sql_us = logRecord.sql_us;
 				p->startTrans = 0;
 				p->count = 0;
 				p->set_autocommit = logRecord.set_autocommit;
@@ -1386,6 +1390,7 @@ void handle() {
 				TRANSINFO p = newTransInfo(logRecord);
 				list_trans = g_list_append(list_trans, p);
 			} else {
+				//清空计数器，设置显示事务
 				TRANSINFO p = (TRANSINFO)lt->data;
 				p->sql_time = logRecord.sql_time;
 				p->startTrans = 1;
