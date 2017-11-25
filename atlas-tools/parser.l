@@ -1393,6 +1393,7 @@ void handle() {
 				//清空计数器，设置显示事务
 				TRANSINFO p = (TRANSINFO)lt->data;
 				p->sql_time = logRecord.sql_time;
+				p->sql_us = logRecord.sql_us;
 				p->startTrans = 1;
 				p->count = 0;
 			}
@@ -1403,6 +1404,7 @@ void handle() {
 			} else {
 				TRANSINFO p = (TRANSINFO)lt->data;
 				p->sql_time = logRecord.sql_time;
+				p->sql_us = logRecord.sql_us;
 				p->startTrans = 0;//显示事务结束
 				p->count = 0;
 			}
