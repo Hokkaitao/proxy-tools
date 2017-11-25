@@ -1344,7 +1344,7 @@ int checkTimeFormat(const char * src) {
 }
 int main(int argc, char **argv) {
     int c, ch;
-    while((ch = getopt(argc, argv, "raf:hpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
+    while((ch = getopt(argc, argv, "rafhpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
         switch(ch) {
             case 'h': {
                 printf(help, argv[0], argv[0], argv[0], argv[0],argv[0],
