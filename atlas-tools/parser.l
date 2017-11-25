@@ -1370,10 +1370,10 @@ void handle() {
 			}
 			GList *lt = g_list_find_custom(list_trans, &logRecord.thread_id, trans_compare);					
 			if(lt == NULL) {
-				TRANSINFO *p = newTransInfo(logRecord);
+				TRANSINFO p = newTransInfo(logRecord);
 				list_trans = g_list_append(list_trans, p);
 			} else {
-				TRANSINFO *p = (TRANSINFO)lt->data;
+				TRANSINFO p = (TRANSINFO)lt->data;
 				p->sql_time = logRecord.sql_time;
 				p->startTrans = 0;
 				p->count = 0;
@@ -1386,7 +1386,7 @@ void handle() {
 				TRANSINFO p = newTransInfo(logRecord);
 				list_trans = g_list_append(list_trans, p);
 			} else {
-				TRANSINFO *p = (TRANSINFO)lt->data;
+				TRANSINFO p = (TRANSINFO)lt->data;
 				p->sql_time = logRecord.sql_time;
 				p->startTrans = 1;
 				p->count = 0;
