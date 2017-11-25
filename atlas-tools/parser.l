@@ -1362,7 +1362,7 @@ void handle() {
 	} else if(checkTrans) {
 		//检查隐式事务
 		if(logRecord.set_autocommit == 10) {
-			char *pos = strcasestr(logRecord.log->str, "set autocommit = 1");
+			char *pos = strcasestr(logRecord.sql->str, "set autocommit = 1");
 			if(pos) {
 				logRecord.set_autocommit = 1;
 			} else {
