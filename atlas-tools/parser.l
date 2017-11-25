@@ -57,6 +57,7 @@
 int sql_type_state[4] = {0};
 
 #define MAX_STRING_LEN 128
+#define MAX_SQL_KEY_LEN 1024
 %}
 
 %s STATE_SQL
@@ -812,6 +813,10 @@ double latencyStatistics = -1024;
 char signature32[MAX_STRING_LEN] = {""};
 int sqlFilter = 0;
 
+char clientIP[MAX_STRING_LEN] = {""};
+char serverIP[MAX_STRING_LEN] = {""};
+char sqlKey[MAX_SQL_KEY_LEN] = {""};
+
 int init = 0;
 int checkTimeSatisfy(long long time) {
     int ret = 1;
@@ -1247,7 +1252,35 @@ void handle() {
                 break;
              }
         }
-    }
+    } else if(clientIP[0]!='\0') {
+		char host[MAX_STRING_LEN] = {""};
+		host_int2string(logRecord.client_ip, logRecord.client_port, host);
+		char *pos = strcasestr(host, clientIP);
+		if(pos != NULL) {
+			GString *p = g_string_new(NULL);
+			log_format(logRecord, p, signature);
+			fprintf(yyout, "%s\n", p->str);
+			g_string_free(p, TRUE);			
+		}
+	} else if(serverIP[0]!='\0') {
+		char host[MAX_STRING_LEN] = {""};
+		host_int2string(logRecord.server_ip, logRecord.server_port, host);
+		char *pos = strcasestr(host, serverIP);
+		if(pos != NULL) {
+			GString *p = g_string_new(NULL);
+			log_format(logRecord, p, signature);
+			fprintf(yyout, "%s\n", p->str);
+			g_string_free(p, TRUE);
+		}
+	} else if(sqlKey!='\0') {
+		char *pos = strcasestr(logRecord.sql->str, sqlKey);
+		if(pos != NULL) {
+			GString *p = g_string_new(NULL);
+			log_format(logRecord, p, signature);
+			fprintf(yyout, "%s\n", p->str);
+			g_string_free(p, TRUE);			
+		}
+	}
 end:
     //check time
     return;
@@ -1281,7 +1314,7 @@ int checkTimeFormat(const char * src) {
 }
 int main(int argc, char **argv) {
     int c, ch;
-    while((ch = getopt(argc, argv, "afhpqw:i:o:b:e:s:d:m:t:x:c:n:u:")) != -1) {
+    while((ch = getopt(argc, argv, "afhpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
         switch(ch) {
             case 'h': {
                 printf(help, argv[0], argv[0], argv[0], argv[0],argv[0],
@@ -1406,6 +1439,18 @@ int main(int argc, char **argv) {
                 sqlFilter = atoi(optarg);        
                 break;
              }
+			 case 'j': {
+				memcpy(clientIP, optarg, strlen(optarg));
+				break;
+			 }
+			 case 'l': {
+				memcpy(serverIP, optarg, strlen(optarg));
+				break;
+			 }
+			 case 'k': {
+				memcpy(sqlKey, optarg, strlen(optarg));
+				break;
+			 }
          }//~switch
     }//~while
     //must have -i -o
