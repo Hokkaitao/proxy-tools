@@ -536,7 +536,7 @@ TRANSINFO newTransInfo(LogRecord record) {
 	p->set_autocommit = record.set_autocommit;
 	return p;
 }
-void freeTransInfo(TRANSINFO p) {
+void freeTransInfo(gpointer p) {
 	if(p) free(p);
 }
 
@@ -1070,7 +1070,7 @@ void trans_callback(gpointer data, gpointer user_data) {
 	TRANSINFO p = (TRANSINFO)data;
 	if(p->count>0) {
 		char time[MAX_STRING_LEN] = {""};
-		formatTick(mktime(p->sql_time), time);
+		formatTick(mktime(&(p->sql_time)), time);
 		fprintf(yyout, "thread_id: %10ld  maybe %5ld uncommited at %s\n", p->thread_id, p->count, time);
 	}
 }
