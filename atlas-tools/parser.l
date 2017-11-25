@@ -1363,7 +1363,7 @@ void handle() {
 		}
 	} else if(extractSQL) {
 		fprintf(yyout, "%s\n", logRecord.sql->str);
-	} else if(checkTrans || checkForUpdate) {
+	} else if(checkTrans) {
 		//检查隐式事务
 		if(logRecord.set_autocommit == 10) {
 			char *pos = strcasestr(logRecord.sql->str, "set autocommit = 1");
