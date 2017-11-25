@@ -519,8 +519,8 @@ TRANSINFO newTransInfo(LogRecord record) {
 	memset(p, 0, sizeof(TRANSINFO));
 	p->thread_id = record.thread_id;
 	p->startTrans = 0;
-	sql_time = record.sql_time;
-	int count = 0;
+	p->sql_time = record.sql_time;
+	p->count = 0;
 	return p;
 }
 void freeTransInfo(TRANSINFO p) {
