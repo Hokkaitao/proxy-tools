@@ -1375,17 +1375,12 @@ void handle() {
 				TRANSINFO p = newTransInfo(logRecord);
 				list_trans = g_list_append(list_trans, p);
 			} else {
-				//清空计数器，设置隐式事务标志，获取时间
+				//设置隐式事务标志
 				TRANSINFO p = (TRANSINFO)lt->data;
 				p->set_autocommit = logRecord.set_autocommit;
-				if(p->set_autocommit == 0) {
-					p->sql_time = logRecord.sql_time;
-					p->sql_us = logRecord.sql_us;
-				} else {
-					//如果有未提交的事务，将隐式事务转换成显示事务
-					if(p->count) {
-						p->startTrans = 1;
-					}
+				//如果有未提交的事务，将隐式事务转换成显示事务
+				if(p->set_autocommit == 1 && p->count > 0) {
+					p->startTrans = 1;
 				}
 			}
 		} else if(logRecord.start_trans) {//检查显示事务
@@ -1396,8 +1391,6 @@ void handle() {
 			} else {
 				//清空计数器，设置显示事务
 				TRANSINFO p = (TRANSINFO)lt->data;
-				p->sql_time = logRecord.sql_time;
-				p->sql_us = logRecord.sql_us;
 				p->startTrans = 1;
 				//之前的事务全部提交
 				p->count = 0;
@@ -1408,8 +1401,6 @@ void handle() {
 				//do nothing
 			} else {
 				TRANSINFO p = (TRANSINFO)lt->data;
-				p->sql_time = logRecord.sql_time;
-				p->sql_us = logRecord.sql_us;
 				p->startTrans = 0;//显示事务结束
 				p->count = 0;//唯一清除计数器
 			}
@@ -1420,6 +1411,8 @@ void handle() {
 			} else {
 				TRANSINFO p = (TRANSINFO)lt->data;
 				if(p->startTrans || p->set_autocommit == 0) {
+					p->sql_time = logRecord.sql_time;
+					p->sql_us = logRecord.sql_us;
 					p->count++;
 				}
 			}
