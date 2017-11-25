@@ -95,9 +95,9 @@ lineblank [ ]
 <STATE_META>"[Slow Query]" {return SQL_SLOW;}
 <STATE_META>. {return SQL_OTHER;}
 <STATE_SQL>"/*"[^*]*[*]+([^*/][^*]*[*]+)*[*]*"/" {return SQL_ANNOTATION;}
-<START_SQL>start|begin {return SQL_KEY_START_TRANS;}
-<START_SQL>commit|rollback {return SQL_KEY_END_TRANS;}
-<START_SQL>autocommit {return SQL_KEY_AUTOCOMMIT;}
+<STATE_SQL>start|begin {return SQL_KEY_START_TRANS;}
+<STATE_SQL>commit|rollback {return SQL_KEY_END_TRANS;}
+<STATE_SQL>autocommit {return SQL_KEY_AUTOCOMMIT;}
 <STATE_SQL>add|all|alter|and|any|as|asc|avg|by|char(acter)?|column|create|cascade|constraint|date|distinct|double|default|default|delete|desc|drop|exists|foreign|float|from|group|having|in|index|insert|into|is|int(eger)?|join|key|left|like|max|min|not|null|or|order|outer|primary|real|references|right|schema|select|set|smallint|sum|table|union|unique|update|value(s)?|varchar|where {return SQL_KEYWORD;}
 <STATE_SQL>[A-Za-z_][A-Z0a-z0-9_]* {return SQL_IDENTIFIER;}
 <STATE_SQL>[(] {return SQL_LEFTBRACKET;}
@@ -1675,7 +1675,7 @@ int main(int argc, char **argv) {
         }
     } else if(signature32[0] != '\0') {
         
-    } elsf if(checkTrans) {
+    } else if(checkTrans) {
 		g_list_foreach(list_trans, trans_callback, NULL);
 		g_list_free_full(list_trans, freeTransInfo);
 		list_trans = NULL;
