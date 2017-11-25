@@ -526,9 +526,6 @@ typedef struct _transInfo{
 	struct tm sql_time;		 
 	long sql_us;
 	int count;
-	int forUpdate;
-	struct tm update_time;
-	long update_us;
 }TransInfo, *TRANSINFO;
 TRANSINFO newTransInfo(LogRecord record) {
 	TRANSINFO p = (TRANSINFO)malloc(sizeof(TransInfo));
@@ -828,7 +825,6 @@ char *help = "\
       -c num                         ## 按类型过滤日志, num 1:insert 2:update 4:delete 8:select 16:other\n\
       -r                             ## 只抽取SQL语句\n\
       -z                             ## 检测是否有未提交的事务(日志切割等原因结果不一定准确,需要人工确认)\n\
-      -y                             ## 检测是否有事务中的select ... for update\n\
 \n[使用例子]:\n\
       %s -h  #help info \n\n\
       %s -i inputfile -o outputfile -f # 格式化日志 \n\
@@ -850,7 +846,6 @@ char *help = "\
       %s -i inputfile -o outputfile -k \"set autocommit\"  ## 过滤SQL中包含set autocommit 的日志\n\
       %s -i inputfile -o outputfile -r ## 抽取SQL语句\n\
       %s -i inputfile -o outputfile -z ## 检测是否有未提交事务\n\
-      %s -i inputfile -o outputfile -y ## 检测是否有事务中的select ... for update\n\
 \n[说明]:\n\
       输出的每个.代表已经处理了约3万行日志\n\
       如果一段时间没有输出.,则可能输入文件有误或是文件内容格式有误\n\n\
@@ -888,7 +883,6 @@ char sqlKey[MAX_SQL_KEY_LEN] = {""};
 int extractSQL = 0;
 
 int checkTrans = 0;
-int checkForUpdate = 0;
 
 int init = 0;
 int checkTimeSatisfy(long long time) {
@@ -1075,14 +1069,6 @@ gint count_latency_compare(gconstpointer item1, gconstpointer item2) {
     } else {
         return 1;
     }
-}
-void update_callback(gpointer data, gpointer user_data) {
-	TRANSINFO p = (TRANSINFO)data;
-	if(p->forUpdate) {
-		char time[MAX_STRING_LEN] = {""};
-		formatTick(mktime(&(p->update_time)), time);
-		fprintf(yyout, "thread_id: %10ld  maybe contain %d \"for update\" in transaction last at %s.%ld\n", p->thread_id, p->forUpdate, time, p->update_us);
-	}
 }
 void trans_callback(gpointer data, gpointer user_data) {
 	TRANSINFO p = (TRANSINFO)data;
@@ -1423,32 +1409,13 @@ void handle() {
 		} else {
 			GList *lt = g_list_find_custom(list_trans, &logRecord.thread_id, trans_compare);					
 			if(lt == NULL) {
-				if(checkForUpdate && logRecord.sql_type == SQL_TYPE_SELECT) {
-					char *pos = strcasestr(logRecord.sql->str, "for update");
-					//未在事务中
-					if(pos) {
-						TRANSINFO p = newTransInfo(logRecord);			
-						p->forUpdate++;
-						p->update_time = logRecord.sql_time;
-						p->update_us = logRecord.sql_us;					
-						list_trans = g_list_append(list_trans, p);			
-					}
-				}
+				//do nothing
 			} else {
 				TRANSINFO p = (TRANSINFO)lt->data;
 				if(p->startTrans || p->set_autocommit == 0) {
 					p->sql_time = logRecord.sql_time;
 					p->sql_us = logRecord.sql_us;
 					p->count++;
-				} else {//未在事务中
-					if(checkForUpdate && logRecord.sql_type == SQL_TYPE_SELECT) {
-						char *pos = strcasestr(logRecord.sql->str, "for update");
-						if(pos) {
-							p->forUpdate++;
-							p->update_time = logRecord.sql_time;
-							p->update_us = logRecord.sql_us;
-						}
-					}
 				}
 			}
 		}
@@ -1486,14 +1453,13 @@ int checkTimeFormat(const char * src) {
 }
 int main(int argc, char **argv) {
     int c, ch;
-    while((ch = getopt(argc, argv, "yzrafhpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
+    while((ch = getopt(argc, argv, "zrafhpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
         switch(ch) {
             case 'h': {
                 printf(help, argv[0], argv[0], argv[0], argv[0],argv[0],
                 argv[0], argv[0], argv[0], argv[0], argv[0], 
                 argv[0], argv[0], argv[0], argv[0], argv[0],
-				argv[0], argv[0], argv[0], argv[0], argv[0], 
-				argv[0]);
+				argv[0], argv[0], argv[0], argv[0], argv[0]);
                 exit(1);
             }
             case 'f': {
@@ -1633,10 +1599,6 @@ int main(int argc, char **argv) {
 				checkTrans = 1;
 				break;
 		     }
-			 case 'y': {
-				checkForUpdate = 1;
-				break;
-			 }
          }//~switch
     }//~while
     //must have -i -o
@@ -1722,10 +1684,6 @@ int main(int argc, char **argv) {
         
     } else if(checkTrans) {
 		g_list_foreach(list_trans, trans_callback, NULL);
-		g_list_free_full(list_trans, freeTransInfo);
-		list_trans = NULL;
-	} else if(checkForUpdate) {
-		g_list_foreach(list_trans, update_callback, NULL);
 		g_list_free_full(list_trans, freeTransInfo);
 		list_trans = NULL;
 	}
