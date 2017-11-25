@@ -762,15 +762,15 @@ char *help = "\
       -q                             ## 按client ip统计次数\n\
       -d num                         ## 统计thread-id 为num的日志,必须和-i -o配合使用\n\n\
       -j ip:port                     ## 按client 的ip:port 过滤日志\n\
-	  -l ip:port                     ## 按server 的ip:port 过滤日志\n\
-	  -k search-words                ## 按搜索包含search-words的所有SQL的日志\n\
+      -l ip:port                     ## 按server 的ip:port 过滤日志\n\
+      -k search-words                ## 按搜索包含search-words的所有SQL的日志\n\
       -a                             ## 按照指纹进行分析,必须和-i -o 配合使用\n\
       -m [a|s|c]                     ## 指纹分析时排序方式，依次为 按平均耗时 总耗时 数量\n\
       -x \"abcdef\"                    ## x后输入32位指纹,根据指纹过滤日志\n\
       -u [d|h|m|s]                   ## 间隔单位: 天 小时 分钟 秒\n\
       -n num                         ## 间隔数,必须和-u 配合使用\n\
       -c num                         ## 按类型过滤日志, num 1:insert 2:update 4:delete 8:select 16:other\n\
-	  -r                             ## 只抽取SQL语句\n\
+      -r                             ## 只抽取SQL语句\n\
 \n[使用例子]:\n\
       %s -h  #help info \n\n\
       %s -i inputfile -o outputfile -f # 格式化日志 \n\
