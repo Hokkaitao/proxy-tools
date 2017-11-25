@@ -29,6 +29,7 @@
 #define SQL_LF 21
 #define SQL_IGNORE 22
 #define SQL_BEGIN 23
+#define SQL_ANNOTATION 24
 
 #define SQL_KEYWORD 101
 #define SQL_IDENTIFIER 102
@@ -88,7 +89,7 @@ lineblank [ ]
 <STATE_META>"Query:" {BEGIN STATE_SQL; return SQL_SQL;}
 <STATE_META>"[Slow Query]" {return SQL_SLOW;}
 <STATE_META>. {return SQL_OTHER;}
-
+<STATE_SQL>"/*"[^*]*[*]+([^*/][^*]*[*]+)*[*]*"/" {return SQL_ANNOTATION;}
 <STATE_SQL>add|all|alter|and|any|as|asc|avg|by|char(acter)?|column|create|cascade|constraint|date|distinct|double|default|default|delete|desc|drop|exists|foreign|float|from|group|having|in|index|insert|into|is|int(eger)?|join|key|left|like|max|min|not|null|or|order|outer|primary|real|references|right|schema|select|set|smallint|sum|table|union|unique|update|value(s)?|varchar|where {return SQL_KEYWORD;}
 <STATE_SQL>[A-Za-z_][A-Z0a-z0-9_]* {return SQL_IDENTIFIER;}
 <STATE_SQL>[(] {return SQL_LEFTBRACKET;}
@@ -365,6 +366,7 @@ typedef struct _log_record {
     GString *sql;
     GString *prototype;
     char signature[MAX_STRING_LEN];
+	char annotation[MAX_STRING_LEN];
 }LogRecord, *LOGRECORD;
 
 void get_date(const int year, const int time, char *dst) {
@@ -413,7 +415,7 @@ void log_format(const LogRecord logRecord, GString *dst, int flag) {
     g_string_append_printf(dst, "%s Query:", logRecord.state == 1?"OK":"ERR");
 
     //sql
-    g_string_append_printf(dst, "%s", logRecord.sql != NULL?logRecord.sql->str:"");
+    g_string_append_printf(dst, "%s%s", logRecord.annotation, logRecord.sql != NULL?logRecord.sql->str:"");
     if(flag & 0x1) {
         //prototype signature
         g_string_append_printf(dst, "prototype:%s ", logRecord.prototype != NULL?logRecord.prototype->str:"");
@@ -458,7 +460,7 @@ void log_format_p(const LOGRECORD logRecord, GString *dst, int flag) {
     g_string_append_printf(dst, "%s Query:", logRecord->state == 1?"OK":"ERR");
 
     //sql
-    g_string_append_printf(dst, "%s", logRecord->sql != NULL?logRecord->sql->str:"");
+    g_string_append_printf(dst, "%s%s", logRecord->annotation, logRecord->sql != NULL?logRecord->sql->str:"");
     if(flag & 0x1) {
         //prototype signature
         g_string_append_printf(dst, "prototype:%s ", logRecord->prototype != NULL?logRecord->prototype->str:"");
@@ -729,11 +731,16 @@ void check(int c) {
             sql_type_state[1] = 1;
             sql_type_state[2] = 1;
             sql_type_state[3] = 1;
+			break;
         }
         case SQL_INVALID:
         case SQL_OTHER: {
             break;
         }
+		case SQL_ANNOTATION: {
+			memcpy(logRecord.annotation, yytext, strlen(yytext));
+			break;
+		}
         default: {
             break;
         }
