@@ -1383,7 +1383,7 @@ void handle() {
 			//如果开启隐式事务，显示事务开启则认为是一次提交
 			GList *lt = g_list_find_custom(list_trans, &logRecord.thread_id, trans_compare);					
 			if(lt == NULL) {
-				TRANSINFO *p = newTransInfo(logRecord);
+				TRANSINFO p = newTransInfo(logRecord);
 				list_trans = g_list_append(list_trans, p);
 			} else {
 				TRANSINFO *p = (TRANSINFO)lt->data;
@@ -1396,7 +1396,7 @@ void handle() {
 			if(lt == NULL) {
 				//do nothing
 			} else {
-				TRANSINFO *p = (TRANSINFO)lt->data;
+				TRANSINFO p = (TRANSINFO)lt->data;
 				p->sql_time = logRecord.sql_time;
 				p->startTrans = 0;//显示事务结束
 				p->count = 0;
@@ -1406,7 +1406,7 @@ void handle() {
 			if(lt == NULL) {
 				//do nothing
 			} else {
-				TRANSINFO *p = (TRANSINFO)lt->data;
+				TRANSINFO p = (TRANSINFO)lt->data;
 				if(p->startTrans || p->set_autocommit == 0) {
 					p->count++;
 				}
