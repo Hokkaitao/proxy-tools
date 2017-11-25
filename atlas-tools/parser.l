@@ -761,12 +761,16 @@ char *help = "\
       -p                             ## 按backend ip统计次数\n\
       -q                             ## 按client ip统计次数\n\
       -d num                         ## 统计thread-id 为num的日志,必须和-i -o配合使用\n\n\
+      -j ip:port                     ## 按client 的ip:port 过滤日志\n\
+	  -l ip:port                     ## 按server 的ip:port 过滤日志\n\
+	  -k search-words                ## 按搜索包含search-words的所有SQL的日志\n\
       -a                             ## 按照指纹进行分析,必须和-i -o 配合使用\n\
       -m [a|s|c]                     ## 指纹分析时排序方式，依次为 按平均耗时 总耗时 数量\n\
       -x \"abcdef\"                    ## x后输入32位指纹,根据指纹过滤日志\n\
       -u [d|h|m|s]                   ## 间隔单位: 天 小时 分钟 秒\n\
       -n num                         ## 间隔数,必须和-u 配合使用\n\
       -c num                         ## 按类型过滤日志, num 1:insert 2:update 4:delete 8:select 16:other\n\
+	  -r                             ## 只抽取SQL语句\n\
 \n[使用例子]:\n\
       %s -h  #help info \n\n\
       %s -i inputfile -o outputfile -f # 格式化日志 \n\
@@ -782,7 +786,11 @@ char *help = "\
       %s -i inputfile -o outputfile -a -u m -n 5 ##指纹分析, 每5m分析一次\n\
       %s -i inputfile -o outputfile -a -m s ## 按照出现总时间来输出统计指纹\n\
       %s -i inputfile -o outputfile -x \"abcdef\" ## 输出指纹为 abcdef 的所有日志\n\
-      %s -i inputfile -o outputfile -c 7 ##过滤出insert update delete语句\n\
+      %s -i inputfile -o outputfile -c 7 ## 过滤出insert update delete语句\n\
+      %s -i inputfile -o outputfile -j 10.1.1.1:1234  ## 过滤来源是客户端为10.1.1.1:1234的日志\n\
+      %s -i inputfile -o outputfile -l 10.1.1.1:1234  ## 过滤发往DB为10.1.1.1:1234的日志\n\
+      %s -i inputfile -o outputfile -k \"set autocommit\"  ## 过滤SQL中包含set autocommit 的日志\n\
+      %s -i inputfile -o outputfile -r ## 抽取SQL语句\n\
 \n[说明]:\n\
       输出的每个.代表已经处理了约3万行日志\n\
       如果一段时间没有输出.,则可能输入文件有误或是文件内容格式有误\n\n\
@@ -816,6 +824,8 @@ int sqlFilter = 0;
 char clientIP[MAX_STRING_LEN] = {""};
 char serverIP[MAX_STRING_LEN] = {""};
 char sqlKey[MAX_SQL_KEY_LEN] = {""};
+
+int extractSQL = 0;
 
 int init = 0;
 int checkTimeSatisfy(long long time) {
@@ -1280,6 +1290,8 @@ void handle() {
 			fprintf(yyout, "%s\n", p->str);
 			g_string_free(p, TRUE);			
 		}
+	} else if(extractSQL) {
+		fprintf(yyout, "%s\n", logRecord.sql->str);
 	}
 end:
     //check time
@@ -1314,12 +1326,13 @@ int checkTimeFormat(const char * src) {
 }
 int main(int argc, char **argv) {
     int c, ch;
-    while((ch = getopt(argc, argv, "afhpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
+    while((ch = getopt(argc, argv, "raf:hpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
         switch(ch) {
             case 'h': {
                 printf(help, argv[0], argv[0], argv[0], argv[0],argv[0],
                 argv[0], argv[0], argv[0], argv[0], argv[0], 
-                argv[0], argv[0], argv[0], argv[0], argv[0]);
+                argv[0], argv[0], argv[0], argv[0], argv[0],
+				argv[0], argv[0], argv[0]);
                 exit(1);
             }
             case 'f': {
@@ -1449,6 +1462,10 @@ int main(int argc, char **argv) {
 			 }
 			 case 'k': {
 				memcpy(sqlKey, optarg, strlen(optarg));
+				break;
+			 }
+			 case 'r': {
+				extractSQL = 1;				
 				break;
 			 }
          }//~switch
