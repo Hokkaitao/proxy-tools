@@ -1599,6 +1599,10 @@ int main(int argc, char **argv) {
 				checkTrans = 1;
 				break;
 		     }
+			default: {
+				printf("%s", errMsg);
+				exit(1);			
+			}
          }//~switch
     }//~while
     //must have -i -o
