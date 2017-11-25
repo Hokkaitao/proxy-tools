@@ -1423,13 +1423,24 @@ void handle() {
 		} else {
 			GList *lt = g_list_find_custom(list_trans, &logRecord.thread_id, trans_compare);					
 			if(lt == NULL) {
-				//do nothing
+				if(checkForUpdate && logRecord.sql_type == SQL_TYPE_SELECT) {
+					char *pos = strcasestr(logRecord.sql->str, "for update");
+					//未在事务中
+					if(pos) {
+						TRANSINFO p = newTransInfo(logRecord);			
+						p->forUpdate++;
+						p->update_time = logRecord.sql_time;
+						p->update_us = logRecord.sql_us;					
+						list_trans = g_list_append(list_trans, p);			
+					}
+				}
 			} else {
 				TRANSINFO p = (TRANSINFO)lt->data;
 				if(p->startTrans || p->set_autocommit == 0) {
 					p->sql_time = logRecord.sql_time;
 					p->sql_us = logRecord.sql_us;
 					p->count++;
+				} else {//未在事务中
 					if(checkForUpdate && logRecord.sql_type == SQL_TYPE_SELECT) {
 						char *pos = strcasestr(logRecord.sql->str, "for update");
 						if(pos) {
