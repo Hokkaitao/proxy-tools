@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <time.h>
 #include <glib.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #define SQL_YEAR 1
 #define SQL_TIME 2
@@ -41,6 +43,9 @@
 #define SQL_SEMICOLON 108
 #define SQL_VALUE 109
 #define SQL_INVALID 110
+#define SQL_GLOBAL 111
+#define SQL_ASTERISK 112
+#define SQL_INTERVAL 113
 
 #define SQL_KEY_START_TRANS 201
 #define SQL_KEY_END_TRANS 202
@@ -103,12 +108,15 @@ lineblank [ ]
 <STATE_SQL>[(] {return SQL_LEFTBRACKET;}
 <STATE_SQL>[)] {return SQL_RIGHTBRACKET;}
 <STATE_SQL>'[^']*'|\"[^\"]*\" {return SQL_TEXTSTRING;}
+<STATE_SQL>([@]{2})?{id}+(.{id}+)? {return SQL_GLOBAL;}
+<STATE_SQL>[*] {return SQL_ASTERISK;}
 <STATE_SQL>[,] {return SQL_COMMA;}
-<STATE_SQL>"<="|">="|"<>"|"!="|[!=]|<STATE_SQL>[*+-/.=<>] {return SQL_OPERATOR;}
+<STATE_SQL>"<="|">="|"<>"|"!="|[!=]|[*+-/.=<>] {return SQL_OPERATOR;}
 <STATE_SQL>[;] {return SQL_SEMICOLON;}
 <STATE_SQL>[0-9]+|[0-9]+"."[0-9]+|"."[0-9]+ {return SQL_VALUE;}
 <STATE_SQL>({lineblank}*{linefeed}*)*{linefeed}/{digit}{4}-{digit}{2}-{digit}{2} {BEGIN STATE_META; return SQL_END;}
 <STATE_SQL>({lineblank}*{linefeed}*)* { return SQL_LF;}
+<STATE_SQL>([^ |\n])+ {return SQL_INTERVAL;}
 <STATE_SQL>. {return SQL_INVALID;}
 %%
 long long getTick(const char *time) {
@@ -321,29 +329,20 @@ void host_string2int(const char *src, int *ip, int *port) {
     }
     char s[MAX_STRING_LEN] = {""};
     memcpy(s, src, strlen(src));
-    char ss[MAX_STRING_LEN] = {""};
-    char *delim = ".", *delim_sub = ":";
-    int p1, p2, p3, p4, p;
-    p1 = atoi(strtok(s, delim));
-    p2 = atoi(strtok(NULL, delim));
-    p3 = atoi(strtok(NULL, delim));
-    p4 = atoi(strtok(NULL, delim_sub));
-    p = atoi(strtok(NULL, delim_sub));
-    *ip = p1*pow(128, 3) + p2*pow(128, 2) + p3*pow(128, 1) + p4;
-    *port = p;
+	char *delim = ":";
+	char *p = strtok(s, delim);
+	*ip = inet_addr(p);
+	*port = atoi(strtok(NULL, delim));
 }
 void host_int2string(const int ip, const int port, char *dst) {
     if(dst == NULL) {
         return;
     }
     char tmp[MAX_STRING_LEN] = {""};
-    int p1, p2, p3, p4;
-    p1 = ip/pow(128, 3);
-    p2 = (ip - p1*pow(128, 3))/pow(128, 2);
-    p3 = (ip - p1*pow(128, 3) - p2*pow(128, 2))/pow(128, 1);
-    p4 = ip - p1*pow(128, 3) - p2*pow(128, 2) - p3*pow(128, 1);
-    sprintf(tmp, "%d.%d.%d.%d:%d", p1, p2, p3, p4, port);
-    memcpy(dst, tmp, strlen(tmp));
+	struct in_addr in;
+	in.s_addr = ip;
+	sprintf(tmp, "%s:%d", inet_ntoa(in), port);
+	memcpy(dst, tmp, strlen(tmp));
 }
 
 int yywrap() {
@@ -397,7 +396,7 @@ void log_format(const LogRecord logRecord, GString *dst, int flag) {
     }
     char tmp[MAX_STRING_LEN] = {""};
     formatTick(mktime(&(logRecord.log_time)), tmp);
-    g_string_append_printf(dst, "%s.%ld ", tmp, logRecord.log_us);
+    g_string_append_printf(dst, "%s.%ld: ", tmp, logRecord.log_us);
 
     memset(tmp, 0, MAX_STRING_LEN);
     formatTick(mktime(&(logRecord.sql_time)), tmp);
@@ -421,7 +420,7 @@ void log_format(const LogRecord logRecord, GString *dst, int flag) {
 
     //type bytes rows latency
     g_string_append_printf(dst,"inj(type:%d bytes:%d rows:%d) ", logRecord.type, logRecord.bytes, logRecord.rows);
-    g_string_append_printf(dst, "%lf(ms) ", logRecord.latency);
+    g_string_append_printf(dst, "%.3lf(ms) ", logRecord.latency);
 
     //OK
     g_string_append_printf(dst, "%s Query:", logRecord.state == 1?"OK":"ERR");
@@ -446,7 +445,7 @@ void log_format_p(const LOGRECORD logRecord, GString *dst, int flag) {
 
     memset(tmp, 0, MAX_STRING_LEN);
     formatTick(mktime(&(logRecord->sql_time)), tmp);
-    g_string_append_printf(dst, "C_begin:%s.%ld ", tmp, logRecord->sql_us);
+    g_string_append_printf(dst, "C_begin:%s.%ld: ", tmp, logRecord->sql_us);
 
     //client info
     memset(tmp, 0, MAX_STRING_LEN);
@@ -466,7 +465,7 @@ void log_format_p(const LOGRECORD logRecord, GString *dst, int flag) {
 
     //type bytes rows latency
     g_string_append_printf(dst,"inj(type:%d bytes:%d rows:%d) ", logRecord->type, logRecord->bytes, logRecord->rows);
-    g_string_append_printf(dst, "%lf(ms) ", logRecord->latency);
+    g_string_append_printf(dst, "%.3lf(ms) ", logRecord->latency);
 
     //OK
     g_string_append_printf(dst, "%s Query:", logRecord->state == 1?"OK":"ERR");
@@ -787,10 +786,23 @@ void check(int c) {
             sql_type_state[3] = 1;
 			break;
         }
-        case SQL_INVALID:
+        case SQL_INTERVAL: {
+            g_string_append_printf(logRecord.sql, "%s ", yytext);
+            g_string_append_printf(logRecord.prototype, "%s ", yytext);
+            break;
+		}
+		case SQL_INVALID: {
+			break;
+		}
         case SQL_OTHER: {
             break;
         }
+		case SQL_GLOBAL: 
+		case SQL_ASTERISK: {
+            g_string_append_printf(logRecord.sql, "%s ", yytext);
+            g_string_append_printf(logRecord.prototype, "%s ", yytext);
+            break;
+		}
 		case SQL_ANNOTATION: {
 			memcpy(logRecord.annotation, yytext, strlen(yytext));
 			break;
