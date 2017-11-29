@@ -427,7 +427,11 @@ void log_format(const LogRecord logRecord, GString *dst, int flag) {
     g_string_append_printf(dst, "%.3lf(ms) ", logRecord.latency);
 
     //OK
-    g_string_append_printf(dst, "%s Query:", logRecord.state == 1?"OK":"ERR");
+	if(!logRecord.field_list) {
+    	g_string_append_printf(dst, "%s Query:", logRecord.state == 1?"OK":"ERR");
+	}else {
+		g_string_append_printf(dst, "%s ", logRecord.state == 1?"OK":"ERR");
+	}
 
     //sql
     g_string_append_printf(dst, "%s%s", logRecord.annotation, logRecord.sql != NULL?logRecord.sql->str:"");
