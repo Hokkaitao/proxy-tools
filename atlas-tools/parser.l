@@ -96,7 +96,8 @@ lineblank [ ]
 <STATE_META>"bytes:"{digit}+ {return SQL_BYTES;}
 <STATE_META>"rows:"{digit}+ {return SQL_ROWS;}
 <STATE_META>{digit}+(.{digit}+)?/"(ms)" {return SQL_LATENCY;}
-<STATE_META>{letter}+/" Query:"|{letter}+/" Field List:" {return SQL_STATE;}
+<STATE_META>{letter}+/" Query:" {return SQL_STATE;}
+<STATE_META>{letter}+/" Field List:" {return SQL_STATE;}
 <STATE_META>"Query:" {BEGIN STATE_SQL; return SQL_SQL;}
 <STATE_META>"Field List:" {BEGIN STATE_SQL;return SQL_FIELDLIST;}
 <STATE_META>"[Slow Query]" {return SQL_SLOW;}
@@ -476,7 +477,7 @@ void log_format_p(const LOGRECORD logRecord, GString *dst, int flag) {
     g_string_append_printf(dst, "%.3lf(ms) ", logRecord->latency);
 
     //OK
-	if(!logRecord.field_list) {
+	if(!logRecord->field_list) {
     	g_string_append_printf(dst, "%s Query:", logRecord->state == 1?"OK":"ERR");
 	} else {
 		g_string_append_printf(dst, "%s ", logRecord->state == 1?"OK":"ERR");
