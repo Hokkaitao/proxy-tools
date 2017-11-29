@@ -32,6 +32,7 @@
 #define SQL_IGNORE 22
 #define SQL_BEGIN 23
 #define SQL_ANNOTATION 24
+#define SQL_FIELDLIST 25
 
 #define SQL_KEYWORD 101
 #define SQL_IDENTIFIER 102
@@ -97,6 +98,7 @@ lineblank [ ]
 <STATE_META>{digit}+(.{digit}+)?/"(ms)" {return SQL_LATENCY;}
 <STATE_META>{letter}+/" Query:" {return SQL_STATE;}
 <STATE_META>"Query:" {BEGIN STATE_SQL; return SQL_SQL;}
+<STATE_META>"Field List:" {BEGIN STATE_SQL;return SQL_FIELDLIST;}
 <STATE_META>"[Slow Query]" {return SQL_SLOW;}
 <STATE_META>. {return SQL_OTHER;}
 <STATE_SQL>"/*"[^*]*[*]+([^*/][^*]*[*]+)*[*]*"/" {return SQL_ANNOTATION;}
@@ -378,6 +380,8 @@ typedef struct _log_record {
 	int start_trans;
 	int end_trans;
 	int set_autocommit;
+
+	int field_list;
 }LogRecord, *LOGRECORD;
 
 void get_date(const int year, const int time, char *dst) {
@@ -805,6 +809,12 @@ void check(int c) {
 		}
 		case SQL_ANNOTATION: {
 			memcpy(logRecord.annotation, yytext, strlen(yytext));
+			break;
+		}
+		case SQL_FIELDLIST: {
+			logRecord.field_list = 1;
+            g_string_append_printf(logRecord.sql, "%s ", yytext);
+            g_string_append_printf(logRecord.prototype, "%s ", yytext);
 			break;
 		}
         default: {
@@ -1374,7 +1384,9 @@ void handle() {
 			g_string_free(p, TRUE);			
 		}
 	} else if(extractSQL) {
-		fprintf(yyout, "%s\n", logRecord.sql->str);
+		if(!logRecord.field_list) {
+			fprintf(yyout, "%s\n", logRecord.sql->str);
+		}
 	} else if(checkTrans) {
 		//检查隐式事务
 		if(logRecord.set_autocommit == 10) {
