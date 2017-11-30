@@ -347,6 +347,16 @@ void host_int2string(const int ip, const int port, char *dst) {
 	sprintf(tmp, "%s:%d", inet_ntoa(in), port);
 	memcpy(dst, tmp, strlen(tmp));
 }
+void ip_int2string(const int ip, char *dst) {
+	if(dst == NULL) {
+		return;
+	}
+	char tmp[MAX_STRING_LEN] = {""};
+	struct in_addr in;
+	in.s_addr = ip;
+	sprintf(tmp, "%s", inet_ntoa(in));
+	memcpy(dst, tmp, strlen(tmp));
+}
 
 int yywrap() {
     return 1;
@@ -865,8 +875,9 @@ char *help = "\
       %s -i inputfile -o outputfile -s 100 ## 统计最慢100条日志\n\
       %s -i inputfile -o outputfile -t 0 ## 统计各个区间内的日志数量\n\
       %s -i inputfile -o outputfile -t 100 ## 打印大于100ms 的日志\n\
-      %s -i inputfile -o outputfile -p ## 按backend ip统计\n\
-      %s -i inputfile -o outputfile -q ## 按client ip统计\n\
+      %s -i inputfile -o outputfile -p ## 按backend ip:port统计\n\
+      %s -i inputfile -o outputfile -q ## 按client ip:port统计\n\
+      %s -i inputfile -o outputfile -g ## 按client ip统计\n\
       %s -i inputfile -o outputfile -d 123 ## 输出thread-id为123的所有日志\n\
       %s -i inputfile -o outputfile -a -u m -n 5 ##指纹分析, 每5m分析一次\n\
       %s -i inputfile -o outputfile -a -m s ## 按照出现总时间来输出统计指纹\n\
@@ -1214,7 +1225,11 @@ void handle() {
         }
     } else if(bBackendIP) {
         char host[MAX_STRING_LEN] = {""};    
-        host_int2string(logRecord.server_ip, logRecord.server_port, host);
+		if(bBackendIP == 1) {
+        	host_int2string(logRecord.server_ip, logRecord.server_port, host);
+		} else {
+			ip_int2string(logRecord.server_ip, host);
+		}
         if(g_hash_table_contains(table_backend, host)) {
             HOSTSTATISTICS p = g_hash_table_lookup(table_backend, host);
             p->count++;
@@ -1486,13 +1501,14 @@ int checkTimeFormat(const char * src) {
 }
 int main(int argc, char **argv) {
     int c, ch;
-    while((ch = getopt(argc, argv, "zrafhpqw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
+    while((ch = getopt(argc, argv, "zrafhpqgw:i:o:b:e:s:d:m:t:x:c:n:u:j:l:k:")) != -1) {
         switch(ch) {
             case 'h': {
                 printf(help, argv[0], argv[0], argv[0], argv[0],argv[0],
                 argv[0], argv[0], argv[0], argv[0], argv[0], 
                 argv[0], argv[0], argv[0], argv[0], argv[0],
-				argv[0], argv[0], argv[0], argv[0], argv[0]);
+				argv[0], argv[0], argv[0], argv[0], argv[0], 
+				argv[0]);
                 exit(1);
             }
             case 'f': {
@@ -1632,6 +1648,10 @@ int main(int argc, char **argv) {
 				checkTrans = 1;
 				break;
 		     }
+			 case 'g': {
+				bClientIP = 2;
+				break;
+			 }
 			default: {
 				printf("%s", errMsg);
 				exit(1);			
