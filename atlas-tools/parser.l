@@ -1225,11 +1225,7 @@ void handle() {
         }
     } else if(bBackendIP) {
         char host[MAX_STRING_LEN] = {""};    
-		if(bBackendIP == 1) {
-        	host_int2string(logRecord.server_ip, logRecord.server_port, host);
-		} else {
-			ip_int2string(logRecord.server_ip, host);
-		}
+        host_int2string(logRecord.server_ip, logRecord.server_port, host);
         if(g_hash_table_contains(table_backend, host)) {
             HOSTSTATISTICS p = g_hash_table_lookup(table_backend, host);
             p->count++;
@@ -1239,7 +1235,11 @@ void handle() {
         }
     } else if(bClientIP) {
         char host[MAX_STRING_LEN] = {""};
-        host_int2string(logRecord.client_ip, logRecord.client_port, host);
+		if(bBackendIP == 1) {
+        	host_int2string(logRecord.client_ip, logRecord.client_port, host);
+		} else {
+			ip_int2string(logRecord.client_ip, host);
+		}
         if(g_hash_table_contains(table_client, host)) {
             HOSTSTATISTICS p = g_hash_table_lookup(table_client, host);
             p->count++;
