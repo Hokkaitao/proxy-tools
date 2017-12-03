@@ -101,7 +101,7 @@ lineblank [ ]
 <STATE_META>"Query:" {BEGIN STATE_SQL; return SQL_SQL;}
 <STATE_META>"Field List:" {BEGIN STATE_SQL;return SQL_FIELDLIST;}
 <STATE_META>"[Slow Query]" {return SQL_SLOW;}
-<STATE_META>. {return SQL_OTHER;}
+<STATE_META>.|{linefeed} {return SQL_OTHER;}
 <STATE_SQL>"/*"[^*]*[*]+([^*/][^*]*[*]+)*[*]*"/" {return SQL_ANNOTATION;}
 <STATE_SQL>start|begin {return SQL_KEY_START_TRANS;}
 <STATE_SQL>commit|rollback {return SQL_KEY_END_TRANS;}
@@ -120,7 +120,7 @@ lineblank [ ]
 <STATE_SQL>({lineblank}*{linefeed}*)*{linefeed}/{digit}{4}-{digit}{2}-{digit}{2} {BEGIN STATE_META; return SQL_END;}
 <STATE_SQL>({lineblank}*{linefeed}*)* { return SQL_LF;}
 <STATE_SQL>([^ |\n])+ {return SQL_INTERVAL;}
-<STATE_SQL>. {return SQL_INVALID;}
+<STATE_SQL>.|{linefeed} {return SQL_INVALID;}
 %%
 long long getTick(const char *time) {
     if(time == NULL) return 0;
