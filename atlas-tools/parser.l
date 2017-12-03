@@ -68,6 +68,8 @@ int sql_type_state[4] = {0};
 
 #define MAX_STRING_LEN 128
 #define MAX_SQL_KEY_LEN 1024
+
+#define YY_BUF_SIZE 1024*1024*100
 %}
 
 %s STATE_SQL
@@ -375,7 +377,7 @@ typedef struct _log_record {
     int server_port;
     char server_db[MAX_STRING_LEN];
     char server_user[MAX_STRING_LEN];
-    int thread_id;
+    long long thread_id;
     int type;
     int bytes;
     int rows;
@@ -428,7 +430,7 @@ void log_format(const LogRecord logRecord, GString *dst, int flag) {
     //server info
     memset(tmp, 0, MAX_STRING_LEN);
     host_int2string(logRecord.server_ip, logRecord.server_port, tmp);
-    g_string_append_printf(dst, "S:%s(thread_id:%d) ", tmp, logRecord.thread_id);
+    g_string_append_printf(dst, "S:%s(thread_id:%ld) ", tmp, logRecord.thread_id);
 
     g_string_append_printf(dst, "S_db:%s ", logRecord.server_db);
     g_string_append_printf(dst, "S_usr:%s ", logRecord.server_user);
@@ -477,7 +479,7 @@ void log_format_p(const LOGRECORD logRecord, GString *dst, int flag) {
     //server info
     memset(tmp, 0, MAX_STRING_LEN);
     host_int2string(logRecord->server_ip, logRecord->server_port, tmp);
-    g_string_append_printf(dst, "S:%s(thread_id:%d) ", tmp, logRecord->thread_id);
+    g_string_append_printf(dst, "S:%s(thread_id:%ld) ", tmp, logRecord->thread_id);
 
     g_string_append_printf(dst, "S_db:%s ", logRecord->server_db);
     g_string_append_printf(dst, "S_usr:%s ", logRecord->server_user);
@@ -542,7 +544,7 @@ void freeLogRecord(gpointer p) {
    free(q);
 }
 typedef struct _transInfo{
-    int thread_id;
+    long long thread_id;
     int startTrans;
 	int set_autocommit;
 	struct tm sql_time;		 
@@ -659,7 +661,7 @@ void check(int c) {
         case SQL_ID: {
             char tmp[MAX_STRING_LEN] = {""};
             get_second(yytext, tmp, ":");
-            logRecord.thread_id = atoi(tmp);
+            logRecord.thread_id = atol(tmp);
             break;
         }
         case SQL_DBS: {
