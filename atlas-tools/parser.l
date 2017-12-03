@@ -69,7 +69,7 @@ int sql_type_state[4] = {0};
 #define MAX_STRING_LEN 128
 #define MAX_SQL_KEY_LEN 1024
 
-#define YY_BUF_SIZE 1024*1024*100
+#define YY_BUF_SIZE 1024*1024*2
 %}
 
 %s STATE_SQL
