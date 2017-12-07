@@ -1237,7 +1237,7 @@ void handle() {
         }
     } else if(bClientIP) {
         char host[MAX_STRING_LEN] = {""};
-		if(bBackendIP == 1) {
+		if(bClientIP == 1) {
         	host_int2string(logRecord.client_ip, logRecord.client_port, host);
 		} else {
 			ip_int2string(logRecord.client_ip, host);
