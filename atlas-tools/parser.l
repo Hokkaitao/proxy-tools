@@ -1235,7 +1235,7 @@ void handle() {
     } else if(bBackendIP) {
         char host[MAX_STRING_LEN] = {""};    
         host_int2string(logRecord.server_ip, logRecord.server_port, host);
-		GList* p = g_list_find_custom(list_backend, host, list_cb_compare);
+		GList* p = g_list_find_custom(list_backend, host, list_host_compare);
 		if(p == NULL) {
 			HOSTSTATISTICS q = newHostStatistics(host);
 			list_backend = g_list_append(list_backend, q);
@@ -1249,7 +1249,7 @@ void handle() {
 		} else {
 			ip_int2string(logRecord.client_ip, host);
 		}
-		GList* p = g_list_find_custom(list_client, host, list_cb_compare);
+		GList* p = g_list_find_custom(list_client, host, list_host_compare);
 		if(p == NULL) {
 			HOSTSTATISTICS q = newHostStatistics(host);
 			list_client = g_list_append(list_client, q);
