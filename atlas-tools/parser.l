@@ -567,8 +567,9 @@ void freeTransInfo(gpointer p) {
 }
 
 LogRecord logRecord;
-GHashTable *table_backend = NULL;
-GHashTable *table_client = NULL;
+
+GList *list_backend = NULL;
+GList *list_client = NULL;
 
 GList *list_slow = NULL;
 GList *list_threadId = NULL;
@@ -977,8 +978,8 @@ HOSTSTATISTICS newHostStatistics(const char * host) {
 void freeHostStatistics(HOSTSTATISTICS p) {
     if(p) free(p);
 }
-void host_callback(gpointer key, gpointer value, gpointer user_data) {
-    HOSTSTATISTICS p = (HOSTSTATISTICS)value;
+void host_callback(gpointer data, gpointer user_data) {
+    HOSTSTATISTICS p = (HOSTSTATISTICS)data;
     fprintf(yyout, "%s %ld\n", p->host, p->count);
 }
 void threadId_callback(gpointer data, gpointer user_data) {
@@ -1189,6 +1190,11 @@ int rangeCal(LogRecord record) {
         return 7;
     }
 }
+
+gint list_host_compare(gconstpointer a, gconstpointer b) {
+	return strcmp(((HOSTSTATISTICS)a)->host, b);
+}
+
 long long dot = 0;
 void handle() {
     //print dot
@@ -1228,13 +1234,13 @@ void handle() {
     } else if(bBackendIP) {
         char host[MAX_STRING_LEN] = {""};    
         host_int2string(logRecord.server_ip, logRecord.server_port, host);
-        if(g_hash_table_contains(table_backend, host)) {
-            HOSTSTATISTICS p = g_hash_table_lookup(table_backend, host);
-            p->count++;
-        } else {
-            HOSTSTATISTICS q = newHostStatistics(host);
-            g_hash_table_insert(table_backend, host, q);
-        }
+		GList* p = g_list_find_custom(list_backend, host, list_backend_compare);
+		if(p == NULL) {
+			HOSTSTATISTICS q = newHostStatistics(host);
+			list_backend = g_list_append(list_backend, q);
+		} else {
+			((HOSTSTATISTICS)(p->data))->count++;
+		}
     } else if(bClientIP) {
         char host[MAX_STRING_LEN] = {""};
 		if(bClientIP == 1) {
@@ -1242,13 +1248,13 @@ void handle() {
 		} else {
 			ip_int2string(logRecord.client_ip, host);
 		}
-        if(g_hash_table_contains(table_client, host)) {
-            HOSTSTATISTICS p = g_hash_table_lookup(table_client, host);
-            p->count++;
-        } else {
-            HOSTSTATISTICS q = newHostStatistics(host);
-            g_hash_table_insert(table_client, host, q);
-        }
+		GList* p = g_list_find_custom(list_client, host, list_client_compare);
+		if(p == NULL) {
+			HOSTSTATISTICS q = newHostStatistics(host);
+			list_client = g_list_append(list_client, q);
+		} else {
+			((HOSTSTATISTICS)(p->data))->count++;
+		}
     } else if(bThreadId) {
         if(logRecord.thread_id != threadId) goto end; 
         LOGRECORD p = newLogRecord(&logRecord);
@@ -1674,9 +1680,6 @@ int main(int argc, char **argv) {
     yyin= fopen(inputfile, "r");
     yyout  = fopen(outputfile, "w");
 
-    //init
-    table_backend = g_hash_table_new(g_str_hash, g_str_equal);
-    table_client = g_hash_table_new(g_str_hash, g_str_equal);
     while(c = yylex()) {
         check(c);
     }
@@ -1691,11 +1694,11 @@ int main(int argc, char **argv) {
        g_list_foreach(list_slow, slow_callback, NULL); 
        g_list_free_full(list_slow, freeLogRecord);
     } else if(bBackendIP) {
-       g_hash_table_foreach(table_backend, host_callback, NULL);
-       g_hash_table_destroy(table_backend);
+		g_list_foreach(list_backend, host_callback, NULL);
+		g_list_free_full(list_backend, freeHostStatistics);
     } else if(bClientIP) {
-       g_hash_table_foreach(table_client, host_callback, NULL);
-       g_hash_table_destroy(table_client);
+		g_list_foreach(list_client, host_callback, NULL);
+		g_list_free_full(list_client, freeHostStatistics);
     } else if(bThreadId) {
        g_list_foreach(list_threadId, threadId_callback, NULL);
        g_list_free_full(list_threadId, freeLogRecord);
