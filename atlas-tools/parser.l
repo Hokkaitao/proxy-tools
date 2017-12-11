@@ -975,8 +975,9 @@ HOSTSTATISTICS newHostStatistics(const char * host) {
     memcpy(p->host, host, strlen(host));
     return p;
 }
-void freeHostStatistics(HOSTSTATISTICS p) {
-    if(p) free(p);
+void freeHostStatistics(gpointer p) {
+	HOSTSTATISTICS q = (HOSTSTATISTICS)p;
+    if(q) free(q);
 }
 void host_callback(gpointer data, gpointer user_data) {
     HOSTSTATISTICS p = (HOSTSTATISTICS)data;
