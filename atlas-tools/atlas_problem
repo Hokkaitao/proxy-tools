@@ -24,6 +24,15 @@
 
 6. proxy中有些client连接来的连接会有不释放的风险。
 
+## DBProxy 1.0 版本存在的问题
+
+1. add gmaster $group_id $host命令不可用
+
+```
+string.find(query:lower(), "^add%s+gmaster%s+%d%d%?%s+%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?:%d%d?%d?%d?%d?$")
+string.find(query:lower(), "^add%s+gslave%s+%d%d?%s+%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?:%d%d?%d?%d?%d?$")
+## 可以修改admin.lua文件使命令生效，避免重启proxy
+``` 
 
 ## DBProxy常见问题分析
 1. 客户端报错: I have no server backend
