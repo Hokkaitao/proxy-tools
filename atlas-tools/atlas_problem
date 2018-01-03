@@ -1,0 +1,45 @@
+## DBProxy0.2.5 版本存在的问题
+1. 突然proxy上慢查询大量增加，而DB端并没有对应的慢查询日志。proxy上慢查询出现时间不固定，机器负载变化不明显。
+
+这个问题目前结论是: 1)可能由于机器运行环境变化导致proxy处理能力降低，可以进行服务组的拆分、增加proxy机器等解决 2)proxy在处理某些SQL时，会隐藏添加一些SQL，因此客户端开来一条SQL执行时间其实是多条SQL执行的时间总和，可以通过对proxy源码修改进行优化处理，减少不必要的隐藏SQL。一般这些隐藏添加的SQL都是连接建立之初添加的，因此频繁的短连会较为明显，长链影响不大，因为这不是主要原因。
+
+2. 突然客户端连接hang住。
+
+大概率是proxy的某work thread不工作了，结合管理日志定位原因。
+
+3. JDBC驱动连接proxy，当主库不可用时，客户端查询也不可用。
+
+这是因为即使是查询语句，JDBC驱动也会发送set autocommit=false 之类的语句，该语句被proxy路由到主库，而主库不可用，会导致查询失败。
+
+4. MySQL5.7 版本的Client连接proxy会hang住，高版本JDBC可能也会出现该问题。
+
+可能是MySQL协议的修改导致的。
+
+5. client的jdbc串中使用不存在的db名，会出现部分连接成功执行，有些却无法成功执行，在日志中显示db的名字不正确。日志中类似如下：
+```
+2017-11-08 12:02:02.827187: C_begin:2017-11-08 12:02:02.825994 C:171.11.11.11:58981 C_db:${database} C_usr:root S:11.11.111.111:3306(thread_id:1079797) S_db:${database} S_usr:root inj(type:4 bytes:18 rows:3) 1.146(ms) OK Query:select * from t1
+```
+
+该问题是atlas中在client-socket与server-socket的变量矫正时，由于use db语句出错没有检查而导致的。当连接池里有可用连接时，虽然use db没有成功，但是后续SQL执行成功了；当连接池没有可用连接时，会报错。
+
+6. proxy中有些client连接来的连接会有不释放的风险。
+
+7. remove tables like 'db.table';不支持大写
+
+该问题是由于正则表达式中少写了L，因此只能识别小写的命令，应为：string.match(query, "^%s*[rR][eE][mM][oO][vV][eE]%s+[tT][aA][bB][lL][eE][sS]%s+[lL][iI][kK][eE]%s+'(.*)'%s*$");
+
+## DBProxy 1.0 版本存在的问题
+
+1. add gmaster $group_id $host命令不可用
+
+```
+string.find(query:lower(), "^add%s+gmaster%s+%d%d%?%s+%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?:%d%d?%d?%d?%d?$")
+string.find(query:lower(), "^add%s+gslave%s+%d%d?%s+%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?:%d%d?%d?%d?%d?$")
+## 可以修改admin.lua文件使命令生效，避免重启proxy
+``` 
+
+## DBProxy常见问题分析
+1. 客户端报错: I have no server backend
+
+主要原因是主库被设置成了非UP状态，主要原因主要有: 1) DB连接数打满/压力过大 2) 权限问题 3) 网络不通 4) 人为设置offline
+
